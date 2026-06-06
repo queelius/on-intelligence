@@ -1,7 +1,7 @@
 # Makefile for On Intelligence and Its Specification
 # Nonfiction: algorithmic information theory and computational eternalism.
 
-PDFLATEX = pdflatex -interaction=nonstopmode -shell-escape
+PDFLATEX = pdflatex -interaction=nonstopmode
 BIBTEX   = bibtex
 
 MAIN     = on-intelligence
