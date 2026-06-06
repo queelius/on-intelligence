@@ -32,23 +32,29 @@ check: $(DEPS)
 	$(PDFLATEX) $(TEX)
 	@echo "Quick compile done (run 'make pdf' for full build)"
 
-# EPUB (reflowable, Kindle/KDP-ready) via tex4ebook.
-# Math and the TikZ diagrams render to SVG (crisp and scalable on EPUB3
-# readers, with the LaTeX kept as img alt-text); footnotes become EPUB3 popup
-# notes; chapters split into separate XHTML files. The cover and metadata are
-# applied in place with ebook-meta (calibre), which does NOT re-render the
-# content, so the tex4ebook output (SVG figures, popup notes) is preserved.
-# Requires: tex4ebook (TeX Live) and ebook-meta (calibre). Optional: install
-# `tidy` for stricter XHTML validity (KDP re-validates on upload regardless).
+# EPUB (reflowable, Kindle/KDP-ready) in two stages:
+#   1. tex4ebook renders the LaTeX to EPUB3. Math and the TikZ diagrams become
+#      SVG (crisp and scalable, with the LaTeX kept as img alt-text), footnotes
+#      become EPUB3 popup notes, and chapters split into separate XHTML files.
+#   2. calibre (ebook-convert) normalizes that into a maximally reader-compatible
+#      EPUB3: a dedicated navigation document, sanitized and valid XHTML, and the
+#      cover and metadata, while preserving the SVG math, figures, and popup
+#      footnotes. This second pass is what makes the file robust on strict
+#      renderers like Kindle (tex4ebook alone produces a valid but rougher EPUB).
+# Requires: tex4ebook (TeX Live) and calibre (ebook-convert).
 epub: $(EPUB)
 
 $(EPUB): $(DEPS) $(COVER)
 	tex4ebook -f epub3 $(TEX)
-	ebook-meta $(EPUB) \
+	ebook-convert $(EPUB) $(MAIN)-normalized.epub \
+		--epub-version 3 \
 		--cover=$(COVER) \
 		--title="On Intelligence and Its Specifications" \
 		--authors="Alex Towell" \
-		--language=en
+		--language=en \
+		--preserve-cover-aspect-ratio \
+		--no-default-epub-cover
+	mv -f $(MAIN)-normalized.epub $(EPUB)
 	@echo "EPUB built: $(EPUB) ($$(du -h $(EPUB) 2>/dev/null | cut -f1))"
 
 # Word count
@@ -64,7 +70,7 @@ wordcount:
 clean:
 	@for ext in $(AUX_EXTS) $(TEX4HT_EXTS); do rm -f *.$$ext; done
 	@rm -f chapters/*.aux
-	@rm -f $(MAIN)*.svg $(MAIN)*.xhtml
+	@rm -f $(MAIN)*.svg $(MAIN)*.xhtml $(MAIN)-normalized.epub
 	@rm -rf $(MAIN)-epub3
 	@echo "Cleaned auxiliary files (outputs preserved)"
 
