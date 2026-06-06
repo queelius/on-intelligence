@@ -1,87 +1,88 @@
-# Multitudes: The Indifference of Measure
+<img src="kdp/cover-front.jpg" alt="On Intelligence and Its Specifications" width="300" align="right">
 
-Volume II of *Worldlines: The Indifference of Geometry*.
+# On Intelligence and Its Specifications
 
-A nonfiction book that takes the reader from optimal learning to the indifference of measure: from the everyday act of induction to the realization that you are not one observer but a class of patterns instantiated at many indices in the computable multiverse, with no privileged self-identification.
+*A lay-readable book on the mathematics of optimal intelligence, the specification problem, and what they imply about modern AI.*
 
-**Status:** Lore scaffold complete. Drafting not yet started.
+by **Alex Towell**
 
-## What This Book Is
+We taught sand to think. We did it before we learned to say what we wanted it to do.
 
-Worldlines established the eternalism of physical spacetime: your life is a finite four-dimensional worm in an indifferent manifold. *Multitudes* establishes a deeper eternalism: the static structure of computable possibility (the Library of Babel formalized), of which physical spacetime is one trajectory.
+There is a real, settled, and genuinely beautiful theory of what intelligence is: Bayes' theorem, Solomonoff's universal prior, and expected-utility maximization, synthesized as AIXI, the optimal agent. And there are the messy, bounded systems we actually built, the large language models everyone now uses. Between the clean theory and the crude practice lies a gap, and that gap is where the safety of all of it is decided.
 
-The bedrock is mathematics that has been settled since the 1960s:
+This book builds both halves from first principles, for the determined lay reader, and points at the gap honestly. The hardest problem turns out not to be making machines capable. It is saying what we want them to do. The specification problem is the whole game.
 
-1. **Bayes' theorem** (Cox's uniqueness)
-2. **Kraft's inequality** (prefix-free codes give probability)
-3. **Solomonoff's dominance theorem** (the universal prior is asymptotically optimal)
+**Status:** Complete. 17 chapters, 4 parts, 214 pages. Paperback published via Amazon KDP (2026); Kindle edition forthcoming.
 
-The book takes four interpretive moves on top of this bedrock, each labeled at its entry:
+## What the book argues
 
-1. Church-Turing applied to reality
-2. Computable Universe Hypothesis (Tegmark IV, restricted)
-3. Many-Worlds Interpretation
-4. Observer-measure assumptions (SSA, SIA, the speed prior)
+The thesis runs through every chapter. There is a clean theoretical limit, AIXI, which captures what optimal agency means under standard assumptions about computation and rationality. There are bounded real systems, the LLMs of 2026, which approximate that limit. The distance between them is real, structural, and consequential. Most of what people argue about under the heading of AI safety, or alignment, is, in different vocabulary, an argument about that gap.
 
-From these, the book traces what the picture does to free will, mortality, love, memory, the self, and the choice of how to live. Then it asks: if the measure cannot console us, what can?
-
-The book closes with care. Not because the measure implies it, but because the measure does not forbid it, and a configuration that contains care is structurally different from one that does not. The same chosen response as Worldlines, in a colder room.
-
-## The Inversion
-
-The book's central conceptual move:
-
-> **Generation is trivial. Indexing is everything.**
-
-The "generator" for reality, taken as the totality of computable structures, is a one-line program: enumerate all programs. The hard problem is not what reality is. The hard problem is where you are in it.
-
-Bayesian inference is the indexing procedure. The simplicity bias is the natural prior on indices. The universal prior is the mathematical structure of indexing under uncertainty. The Many-Worlds Interpretation and the Computable Universe Hypothesis are two routes to the same fact: many indices contain a version of you, and the measure does not single out which one is yours.
+It is not a textbook and not a polemic. Math is used where it has to be, explained conceptually before it is formalized, with diagrams carrying as much of the work as the prose. The reader is treated as intelligent and willing to work. Closer to a Penguin science book than to a survey. No formal background is required.
 
 ## Structure
 
+Seventeen chapters across four parts. Parts I to III develop the theory in clean settings; Part IV moves to messy practice.
+
 | Part | Chapters | Focus |
 |------|----------|-------|
-| I. The Discovery | 1-7 | The bedrock, the indexing inversion, the speculative moves |
-| II. The Response | 8-13 | What multiplicity does to human concepts, and the chosen response |
+| **I. Prediction** | 1 to 4 | Bayes, the prior problem, description and probability, Solomonoff induction |
+| **II. Decision** | 5 to 8 | The agent, reinforcement learning, generalization, AIXI |
+| **III. The Specification Problem** | 9 to 12 | Reward modeling, inner alignment, why optimization is dangerous, mitigations and their limits |
+| **IV. Reality** | 13 to 17 | Large language models, reward and reasoning, the gap, what's ahead, and the finale (*Teaching Sand to Think*) |
 
-## Repository Structure
+The closing chapter takes a committed stand the mathematics earns: prediction carried far enough is intelligence; these are real minds built of sand; the prize is enormous and the danger is the same capability; the burden of proof on the trajectory has shifted.
 
-```
-multitudes/
-├── multitudes.tex                 # Main LaTeX file
-├── chapters/                      # Chapter .tex files (to be written)
-├── lore/                          # Pedagogical documentation
-│   ├── foundations.md             # Bedrock and the cascade
-│   ├── themes.md                  # Core vision
-│   ├── math-grounding.md          # Mathematical reference
-│   ├── implications.md            # What multiplicity does to concepts
-│   ├── outline.md                 # Chapter outline
-│   ├── direction.md               # Format, tone, pedagogy
-│   └── grace.md                   # The destination
-├── figures/                       # TikZ diagrams
-├── images/                        # Bitmap images
-├── kdp/                           # KDP publishing resources
-└── Makefile                       # Build system
-```
+## Reading it
 
-## Building
+- **Paperback:** published via Amazon KDP (6 x 9, 214 pages). Buy link added once the listing is live.
+- **From this repository:** the build outputs are tracked, so you can read it directly.
+  - [`on-intelligence.pdf`](on-intelligence.pdf), the print edition.
+  - [`on-intelligence.epub`](on-intelligence.epub), the reflowable Kindle edition (math and diagrams as scalable SVG, footnotes as popups).
+
+## Building from source
+
+The book is written in LaTeX. The print PDF builds with `latexmk` (it reruns until cross-references and the table of contents converge). The EPUB builds with `tex4ebook`, which renders the math and the TikZ diagrams to SVG and turns footnotes into EPUB3 popup notes.
 
 ```bash
-make              # Full PDF build
-make epub         # EPUB
-make wordcount    # Word counts
+make            # build the print PDF (default)
+make epub       # build the reflowable Kindle EPUB (needs tex4ebook + calibre)
+make wordcount  # word count
+make clean      # remove build intermediates (outputs preserved)
+make help       # list all targets
 ```
 
-(Drafting in progress; chapter files do not yet exist.)
+Requirements: a TeX Live distribution (with `latexmk` and `tex4ebook`) for the PDF and EPUB, and `calibre` (`ebook-meta`) to set the EPUB cover and metadata.
 
-## Pairing with Worldlines
+## Repository layout
 
-This book is Volume II of Worldlines and is intended to be read after it. Both stand alone. The pairing produces a single argument that operates at two levels: physical eternalism (Worldlines) and computational eternalism (this).
+```
+on-intelligence/
+├── on-intelligence.tex      # main LaTeX file
+├── chapters/                # one .tex per chapter (+ archive/ of the prior framing)
+├── lore/                    # the editorial bible: outline, themes, direction, math reference
+├── figures/                 # TikZ diagrams (most are inline in the chapters)
+├── kdp/                     # cover assets (front + print-ready full-wrap PDF)
+├── docs/                    # editorial review and integration records
+├── Makefile                 # build system (PDF via latexmk, EPUB via tex4ebook)
+├── CITATION.cff             # citation metadata ("Cite this repository")
+└── .zenodo.json             # Zenodo DOI metadata
+```
+
+The book was restructured once. It began as a philosophical companion to the author's *Worldlines*; the technical core was the strongest part, and the new direction takes that material as its spine and points it at a concrete destination, AI safety understood mathematically. The prior framing is preserved under `chapters/archive/` and `lore/archive/`.
+
+## In the same tradition
+
+The book sits alongside Brian Christian's *The Alignment Problem*, Stuart Russell's *Human Compatible*, and Max Tegmark's *Our Mathematical Universe*, and it shares a structural move with the author's own *Worldlines: The Indifference of Geometry*: settled mathematics at the bottom, lived implications at the top, no hand-waving in between.
+
+## Citation
+
+If you reference this book, please cite it using the metadata in [`CITATION.cff`](CITATION.cff), or via the "Cite this repository" button on GitHub. Author: Alexander Towell, ORCID [0000-0001-6443-9897](https://orcid.org/0000-0001-6443-9897), Southern Illinois University Edwardsville.
 
 ## Author
 
-Alex Towell. [lex@metafunctor.com](mailto:lex@metafunctor.com). [metafunctor.com](https://metafunctor.com)
+Alex Towell. [lex@metafunctor.com](mailto:lex@metafunctor.com) | [metafunctor.com](https://metafunctor.com) | [@queelius](https://github.com/queelius)
 
 ## License
 
-CC-BY-NC-SA-4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International). Pedagogical adaptation is welcome.
+[CC-BY-NC-SA-4.0](LICENSE) (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International). Pedagogical adaptation is welcome with attribution.
