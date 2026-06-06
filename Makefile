@@ -65,6 +65,7 @@ clean:
 	@for ext in $(AUX_EXTS) $(TEX4HT_EXTS); do rm -f *.$$ext; done
 	@rm -f chapters/*.aux
 	@rm -f $(MAIN)*.svg $(MAIN)*.xhtml
+	@rm -rf $(MAIN)-epub3
 	@echo "Cleaned auxiliary files (outputs preserved)"
 
 distclean: clean
