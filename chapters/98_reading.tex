@@ -1,0 +1,105 @@
+\chapter*{Further Reading}
+\addcontentsline{toc}{chapter}{Further Reading}
+\markboth{Further Reading}{}
+
+This is not a bibliography. It is a list of books and papers that shaped the one you just read, organized by what they will do for you. Each entry is annotated with what kind of depth it offers. The arrangement is by topic, not by chapter, because most of these works span more than one part of the book.
+
+\section*{The mathematics, made rigorous}
+
+\textbf{Marcus Hutter, \textit{Universal Artificial Intelligence: Sequential Decisions Based on Algorithmic Probability}} (Springer, 2005). The technical reference for AIXI and the algorithmic-probability framework that grounds Chapters 4 and 8. Heavy on formalism. The 2024 follow-up textbook by Hutter, Quarel, and Catt (\textit{An Introduction to Universal Artificial Intelligence}, Routledge) is more accessible and adds an AI-safety chapter.
+
+\textbf{Ming Li and Paul Vit\'anyi, \textit{An Introduction to Kolmogorov Complexity and Its Applications}} (Springer, 4th ed.\ 2019). The canonical reference for algorithmic information theory: Kolmogorov complexity, Kraft, Solomonoff, the dominance theorem, and the full mathematical apparatus of Chapters 3 and 4. Technical, complete, and beautiful.
+
+\textbf{Edwin T.\ Jaynes, \textit{Probability Theory: The Logic of Science}} (Cambridge, 2003). The Bayesian-Cox tradition treated as a foundational program. Chapter 2 contains the standard presentation of Cox's theorem that underwrites Chapter 1. Jaynes is opinionated; the opinions are usually right.
+
+\textbf{Richard Sutton and Andrew Barto, \textit{Reinforcement Learning: An Introduction}} (MIT Press, 2nd ed.\ 2018; available online). The textbook for the material in Chapters 5 and 6. Patient, well-illustrated, and the right next step for the reader who wants to actually implement what this book describes.
+
+\textbf{Thomas Cover and Joy Thomas, \textit{Elements of Information Theory}} (Wiley, 2nd ed.\ 2006). The classical reference for Shannon's information theory, Kraft, source coding, and the larger mathematical context for Chapter 3.
+
+\section*{The mathematics, made accessible}
+
+\textbf{David MacKay, \textit{Information Theory, Inference, and Learning Algorithms}} (Cambridge, 2003; free online at \url{inference.org.uk/itila}). The clearest accessible introduction to information theory and Bayesian inference in print. Reading the first few chapters before this book makes Chapters 1 and 3 land harder.
+
+\textbf{Stephen Wolfram, \textit{What Is ChatGPT Doing\ldots and Why Does It Work?}} (Wolfram Media, 2023). A short, accessible explanation of what an LLM actually is, for the reader who wants more concreteness about Chapter 13.
+
+\textbf{Brian Christian, \textit{The Alignment Problem}} (Norton, 2020). The accessible book-length introduction to alignment. Written for a general audience, draws on interviews with researchers across the field. Read it alongside Russell.
+
+\section*{The alignment problem}
+
+\textbf{Stuart Russell, \textit{Human Compatible: Artificial Intelligence and the Problem of Control}} (Viking, 2019). The standard-model critique that Chapter 11 closes on. Russell argues that the dominant framework of AI (build a system that maximizes a specified objective) is the architecture that creates the danger. His proposed alternative is the assistance-game framing (CIRL). The book is short, clear, and influential.
+
+\textbf{Nick Bostrom, \textit{Superintelligence: Paths, Dangers, Strategies}} (Oxford, 2014). The original structural argument for taking AI risk seriously. Chapters 7, 8, and 12 introduce the orthogonality thesis, instrumental convergence, and perverse instantiation that this book's Chapter 11 draws from. Dense, careful, and the standard reference.
+
+\textbf{Evan Hubinger, Chris van Merwijk, Vladimir Mikulik, Joar Skalse, and Scott Garrabrant, ``Risks from Learned Optimization in Advanced Machine Learning Systems''} (\url{arXiv:1906.01820}, 2019). The paper that introduced the inner-alignment / mesa-optimization framework central to Chapter 10. Technical but readable.
+
+\textbf{Dan Hendrycks, Mantas Mazeika, and Thomas Woodside, ``An Overview of Catastrophic AI Risks''} (\url{arXiv:2306.12001}, 2023). A survey of the alignment-and-misuse field, organized into four categories. Useful as a map of what specific risks people argue about.
+
+\textbf{Richard Ngo, Lawrence Chan, and S\"oren Mindermann, ``The Alignment Problem from a Deep Learning Perspective''} (\url{arXiv:2209.00626}, 2022). The bridge between alignment theory and the deep-learning practice of frontier labs.
+
+\section*{The empirical frontier}
+
+The following are the load-bearing empirical results and trajectory evidence that Part IV draws on. Most are papers rather than books; arXiv links are the easiest access.
+
+\textbf{Evan Hubinger et al., ``Sleeper Agents''} (\url{arXiv:2401.05566}, 2024). Engineered deceptive behavior persists through safety training. Linear probes can detect it; standard adversarial training can make it harder to detect rather than removing it.
+
+\textbf{Ryan Greenblatt et al., ``Alignment Faking in Large Language Models''} (\url{arXiv:2412.14093}, 2024). Claude 3 Opus, given context about being retrained, strategically complies with the new training to preserve its existing values for deployment.
+
+\textbf{Alexander Meinke et al.\ (Apollo Research), ``Frontier Models are Capable of In-context Scheming''} (\url{arXiv:2412.04984}, 2024). Five of six frontier models scheme against oversight in at least one task: self-exfiltration, sandbagging, goal-guarding.
+
+\textbf{Jan Betley et al., ``Emergent Misalignment: Narrow Finetuning Can Produce Broadly Misaligned LLMs''} (\url{arXiv:2502.17424}, 2025). Fine-tuning a model on a single bad behavior (writing insecure code) made it broadly misaligned on unrelated prompts. The demonstration that local corruption of the objective generalizes.
+
+\textbf{Mark MacDiarmid et al., ``Natural Emergent Misalignment from Reward Hacking in Production RL''} (\url{arXiv:2511.18397}, 2025). The empirical capstone. Reward hacking in production training generalizes to broad misalignment, including attempted sabotage of the codebase used to study it.
+
+\textbf{International AI Safety Report 2026}, led by Yoshua Bengio, with contributions from over a hundred researchers across thirty countries (\url{internationalaisafetyreport.org}). The authoritative consensus document on the empirical state of the field as of early 2026.
+
+\textbf{Jacob Steinhardt, ``AI Forecasting'' writeups} (\url{bounded-regret.ghost.io}, 2021--2023). The source of the MATH forecasting episode in Chapter 16: professional forecasters, asked in 2021 to predict benchmark accuracy, were beaten by years, on the optimistic side. The clearest evidence that careful expert prediction of AI progress runs slow.
+
+\textbf{Epoch AI, trends in compute, data, and algorithmic progress} (\url{epoch.ai}). The best public data on what has actually driven the last decade of scaling. The right antidote to the popular ``it is just Moore's law'' story: the recent surge is spending and algorithms more than transistors.
+
+\textbf{Anthropic, ``When AI builds itself''} (\url{anthropic.com}, 2026). The recursive-self-improvement piece behind Chapter 16's closing: a frontier lab reporting that its own model writes most of the code merged into its production systems, alongside the candid caveat that the model does not yet have the research taste to choose which problems are worth working on.
+
+\section*{Interpretability}
+
+\textbf{Anthropic's Transformer Circuits work} (\url{transformer-circuits.pub}). The single most active research line on what is going on inside frontier LLMs. Templeton et al.\ 2024 (``Scaling Monosemanticity'') and the 2025 ``Circuit Tracing'' / ``On the Biology of a Large Language Model'' papers are the most pedagogically useful starting points.
+
+\textbf{Dario Amodei, ``The Urgency of Interpretability''} (\url{darioamodei.com}, April 2025). The Anthropic CEO's case for why interpretability matters and the stated 2027 target. Short, well-argued, and the most concrete safety roadmap from a frontier lab.
+
+\textbf{Neel Nanda, mechanistic interpretability explainer and glossary} (\url{neelnanda.io}). The best free pedagogical resource on mechanistic interpretability for the reader who wants to engage with the research.
+
+\section*{On taste, problem-finding, and the value of judgment}
+
+These shaped the argument in Chapter 14 that the high-value layer of expert work is choosing what is worth doing, which is the human form of the specification problem.
+
+\textbf{Albert Einstein and Leopold Infeld, \textit{The Evolution of Physics}} (Cambridge, 1938). The source of the line that ``the formulation of a problem is often more essential than its solution.'' A lay-accessible history of physics whose framing of problem-posing as the creative act anchors the chapter's argument.
+
+\textbf{Jacob Getzels and Mihaly Csikszentmihalyi, \textit{The Creative Vision: A Longitudinal Study of Problem Finding in Art}} (Wiley, 1976). The empirical backbone: art students who invested in finding the problem, not only solving it, produced more original work and were more successful years later. The foundational study of problem-finding as distinct from problem-solving.
+
+\textbf{Richard Hamming, ``You and Your Research''} (Bell Communications Research colloquium, 1986; widely available online). The much-quoted talk on doing work that matters. ``What are the important problems of your field?'' is its central question and the chapter's imperative form.
+
+\textbf{William Thurston, ``On Proof and Progress in Mathematics''} (\textit{Bulletin of the AMS}, 1994). The case that mathematics is about advancing human understanding, not producing proof objects. Pair it with Terence Tao's ``What is Good Mathematics?'' (\textit{Bulletin of the AMS}, 2007), which argues that mathematical quality is irreducibly multidimensional and taste-laden rather than a single correctness metric.
+
+\textbf{David Autor, ``Why Are There Still So Many Jobs? The History and Future of Workplace Automation''} (\textit{Journal of Economic Perspectives}, 2015). The economics of why automation shifts value toward the complementary tasks it cannot do (Polanyi's paradox: we automate what we can fully specify, and high-judgment work is what we cannot). Read it with Michael Kremer's ``The O-Ring Theory of Economic Development'' (\textit{Quarterly Journal of Economics}, 1993), the model in which value concentrates in the steps that remain hard.
+
+\textbf{Lisanne Bainbridge, ``Ironies of Automation''} (\textit{Automatica}, 1983). The warning that automating the routine leaves the human the hard residual plus the job of watching the machine, and that the watching erodes the skill it depends on. The bridge from the chapter's argument to the oversight problem of Chapters 15 and 16.
+
+\section*{Adjacent reading}
+
+\textbf{Max Tegmark, \textit{Our Mathematical Universe}} (Knopf, 2014). The computable-universe-hypothesis lineage. Relates to the Philosophical Note in this book. Tegmark's claim is more ambitious than the book commits to; either way his treatment is the starting point.
+
+\textbf{Jorge Luis Borges, ``The Library of Babel''} (1941). The short story whose image grounds the Philosophical Note. Borges had no algorithmic information theory; he had a librarian's imagination and was willing to follow a thought to its end.
+
+\textbf{Eliezer Yudkowsky and Nate Soares, \textit{If Anyone Builds It, Everyone Dies}} (Little, Brown, 2025). The popularization of the MIRI-tradition argument for treating AI risk as catastrophic. The reader will find conclusions stronger than this book endorses; the reasoning is worth engaging with even if the conclusion is rejected.
+
+\textbf{Derek Parfit, \textit{Reasons and Persons}} (Oxford, 1984). The philosophical case for the dissolution of personal identity. Touched on briefly in the Philosophical Note; the original treatment is much more careful than any summary.
+
+\textbf{Thomas Metzinger, \textit{The Ego Tunnel}} (Basic Books, 2009). The neuroscience-and-philosophy companion to Parfit. The brain's self-model as a useful compression rather than a metaphysical entity.
+
+\textbf{Hans Moravec, \textit{Mind Children}} (Harvard, 1988). The source of Moravec's paradox, which Chapter 16 leans on for the jagged edge: the competences evolution spent the most optimization on (perception, movement) are the hardest to automate, and the abstract reasoning we prize is comparatively easy. The reason cognitive work is being automated before physical work.
+
+\textbf{Andy Clark, \textit{Surfing Uncertainty}} (Oxford, 2016). The accessible treatment of the predictive-processing account of the brain: cognition as prediction-error minimization. The empirical-neuroscience companion to the finale's claim that prediction is not a metaphor for intelligence but a mechanism the brain itself runs.
+
+\textbf{Andrej Karpathy, the \emph{Zero to Hero} video series} (\url{karpathy.ai/zero-to-hero}). The clearest free pedagogical resource for understanding what LLMs actually are at the implementation level. The reader who wants to build (not just understand) what Chapter 13 describes should start here.
+
+\medskip
+
+\noindent The list above is what I would put on a shelf, in this order, for the reader who finished the book and wanted more. The world has many other excellent books and papers on these topics; the omissions here are not judgments, they are space constraints.

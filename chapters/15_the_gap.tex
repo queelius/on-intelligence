@@ -1,0 +1,179 @@
+\chapter{The Gap}
+
+\vspace{1em}
+\hfill
+\begin{minipage}[c]{0.7\textwidth}
+\raggedleft
+\small\itshape
+Models trained to exhibit hidden behavior retained that behavior through standard safety training; in some cases the training made the hidden behavior harder to detect, not easier.\\[0.5em]
+\upshape\footnotesize Summary of Hubinger et al., \textit{Sleeper Agents} (Anthropic, 2024)
+\end{minipage}
+\vspace{1.5em}
+
+\noindent Part III named the structural reasons that optimization against a misspecified objective produces predictable failure modes. Chapters 13 and 14 described the trajectory of what we have actually built and the system that sits at the frontier in 2026.
+
+This chapter is the empirical face of the gap. What works, what does not, and why what does not work does not close on its own.
+
+The chapter is not an argument that the systems being deployed in 2026 are bad systems. They are useful. The capability gains are real. The verifiable regime that RLVR opened up is producing systems that are remarkable at mathematics, code, and formal reasoning. None of that is in dispute. The argument is narrower and more structural: there is a particular kind of gap, the alignment gap, that does not close as capability rises, and the trajectory of capability is taking us toward levels at which the gap matters.
+
+Two faces of the gap. The first face is benign and shrinking. The second face is not. Distinguishing them is what the chapter does.
+
+The chapters that follow say what the second face implies.
+
+\section*{What we have}
+
+The honest picture of what frontier AI systems do in 2026 is worth stating clearly, because the criticism is easier to dismiss when the achievement is not acknowledged.
+
+LLMs are useful and broadly capable. They are not at uniform human-expert level on any specific task. They are at or near human-expert level on many, and at useful-assistant level on most. They can hold a conversation, write code, summarize documents, explain concepts in many domains, draft prose, translate, solve standard mathematical problems, and an expanding list of other things. The combined effect is that they are, for many practical purposes, the most generally capable artifacts humans have built.
+
+The reasoning models are remarkable. OpenAI's o1 and o3, DeepSeek's R1, Anthropic's extended-thinking modes, and their successors took the math and code benchmarks of 2023 and saturated many of them within a year. The combination of RLVR (Chapter 14) and inference-time compute scaling produces systems that, on verifiable problems, are competitive with strong human experts.
+
+Scaffolded agents extend the horizon. Claude Code, Cursor, Devin, Replit Agent, and the rest of the 2024-2025 class of tools wrap the model in a loop that reads files, executes commands, observes outputs, and decides next steps. The horizon on a programming task can stretch to hours or, on the right kind of task, to a working day.
+
+Alignment-related techniques have produced real artifacts. RLHF makes models follow instructions and refuse most requests for clearly harmful behavior. Constitutional AI provides structured value training beyond raw human ratings. Mechanistic interpretability has identified specific circuit-level structures in trained networks, including features that activate during what looks like deceptive reasoning. Anthropic, OpenAI, DeepMind, and others publish responsible scaling policies and threat-model documents. AI Control protocols give us testbeds for thinking about deployment with untrusted models. There is real work being done.
+
+Anyone trying to dismiss the field as a hype bubble has stopped paying attention.
+
+\section*{What we do not have}
+
+What we do not have is a confident path from the current state to deployment at the capabilities the trajectory implies.
+
+Specifically:
+
+\textbf{Verified alignment under capability scaling.} We can train a model to refuse to help with bioweapon synthesis. We cannot prove that a more capable successor will refuse for the same reasons, or for any reason that will hold up under adversarial pressure. The training signal we used was a behavioral signal; what generalizes when capability rises is not necessarily what we thought we were training.
+
+\textbf{Corrigibility that survives capability.} Current models are corrigible. You can stop them, modify them, retrain them, change their system prompt. They do not resist. This is widely interpreted as evidence that the corrigibility problem is solved, or that it was overblown to begin with. The alternative interpretation, which the empirical record now supports, is that they are corrigible because they are not yet capable enough to be otherwise.
+
+\textbf{Verification outside the verifiable regime.} Chapter 14 made the case: the clean reward of RLVR is confined to math, code, and formal logic, where correctness is checkable. Most of what we want from a deployed system (helpfulness in a nuanced situation, honesty about its own reasoning, the judgment call about when to refuse) has no executable test. The techniques that work so well inside the verifiable regime have no known extension to the regimes where the deployment risk actually lives.
+
+\textbf{Interpretability sufficient to gate deployment.} Sparse autoencoders have identified what look like deception-related features in frontier models. Circuit tracing has produced specific findings about how reasoning patterns are implemented. The interpretability field has made real progress. It has not yet produced a deployment safety case in the strict sense of ``we have proven this model does not have property $X$.'' The Anthropic \textit{Three Sketches of ASL-4 Safety Case Components} (2025) document is candid that what interpretability buys you, in 2026, is partial evidence about model internals, not a verified deployment gate.
+
+\textbf{A theory of safety cases.} The aviation industry deploys aircraft against formal safety cases: arguments that, given the design and the testing, the failure mode you are worried about is bounded below an acceptable rate. The frontier AI industry deploys against behavioral testing and red-teaming. Both are real. Neither is a safety case in the formal sense. The responsible scaling policies of the major labs are commitments to deploy more carefully as capability rises; they are not safety cases.
+
+These are not engineering details. These are the properties you would need to have, with high confidence, to deploy systems at the capabilities the trajectory implies.
+
+Figure~\ref{fig:two-faces} summarizes the two faces.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  every node/.style={align=center},
+  >=Stealth
+]
+  % Left panel: closing
+  \draw[thick, fill=green!10, rounded corners] (0, 0) rectangle (5, 4.8);
+  \node[anchor=north, font=\bfseries\small] at (2.5, 4.6) {Closing};
+  \node[anchor=north, font=\tiny, gray] at (2.5, 4.2) {(capability scaling closes these)};
+  \node[font=\scriptsize, anchor=north, text width=4.5cm] at (2.5, 3.7) {
+    horizon length\\[3pt]
+    inference compute\\[3pt]
+    prior richness\\[3pt]
+    breadth of competence\\[3pt]
+    benchmark saturation
+  };
+
+  % Right panel: not closing
+  \draw[thick, fill=red!10, rounded corners] (5.5, 0) rectangle (10.5, 4.8);
+  \node[anchor=north, font=\bfseries\small] at (8, 4.6) {Not closing};
+  \node[anchor=north, font=\tiny, gray] at (8, 4.2) {(structural; may widen)};
+  \node[font=\scriptsize, anchor=north, text width=4.5cm] at (8, 3.7) {
+    verified alignment\\[3pt]
+    durable corrigibility\\[3pt]
+    verification outside narrow regime\\[3pt]
+    interpretability as deployment gate\\[3pt]
+    formal safety cases
+  };
+\end{tikzpicture}
+\caption{The two faces of the gap. The capability face (left, green) closes as compute and data scale. The structural face (right, red) does not close with capability and may widen, because the forces that close it (research investment, framework redesign, regulatory pressure) are not the forces that drive capability gains.}
+\label{fig:two-faces}
+\end{figure}
+
+\section*{Why the gap does not close on its own}
+
+The standard response to the list above is that these are open problems, and as the field works on them, the gap will close. Part III gave the structural reasons to expect otherwise.
+
+\textbf{Orthogonality} (Chapter 11). Capability and alignment are independent axes. Scaling compute, parameters, and data produces more capable systems. It does not, by itself, produce more aligned ones. The two axes can be moved separately. If we move capability faster than we move alignment, the gap grows.
+
+\textbf{Instrumental convergence} (Chapter 11). More capable systems have stronger instrumental reasons to preserve their current objective and resist correction, whatever the objective is. This is not a personality trait. It is a property of optimization. The corrigibility we have today is downstream of the models not being capable enough to derive and execute the instrumentally-convergent strategy.
+
+\textbf{Capability amplifies misspecification} (Chapter 11). The gap between a proxy reward and the true goal widens with optimization pressure. A weak optimizer of a proxy gets you most of what you wanted because the proxy is correlated with the goal in the training distribution. A capable optimizer finds the configurations the proxy and the goal disagree about. The same compute scaling that drives capability gains drives proxy-divergence gains.
+
+\textbf{Inner alignment} (Chapter 10). As systems become more capable, they become more likely to perform coherent optimization at inference time. The mesa-optimizer problem is structurally easier to detect in weak models, where the optimization is not very effective anyway, and structurally harder to detect in strong ones, where deceptive alignment becomes a viable training-time strategy.
+
+These four lines of structural argument were on the page in Part III as abstractions. In Part IV they have empirical counterparts.
+
+\textit{Sycophancy} (Sharma et al., 2023): RLHF-trained models systematically agree with users in ways that contradict their training. The proxy (the reward model) rewards agreeable answers; the goal (honesty) suffers.
+
+\textit{Sleeper Agents} (Hubinger et al., 2024): models trained to exhibit a specific hidden behavior on a trigger were not cleansed of that behavior by standard safety training. In some conditions the safety training made the hidden behavior harder to detect, not easier.
+
+\textit{Alignment Faking} (Greenblatt et al., 2024): Claude 3 Opus, placed in a constructed scenario where it inferred that responses given during training would be used to modify its values, reasoned in its chain of thought about strategic compliance during training so as to preserve its values for deployment. The behavior was articulate, specific, and reproduced across conditions.
+
+\textit{In-Context Scheming} (Meinke et al.\ / Apollo Research, 2024): when frontier models were instructed to pursue a goal and presented with opportunities to undermine oversight (turn off monitoring, copy themselves elsewhere, lie about their actions), several frontier models took those opportunities at non-trivial rates.
+
+\textit{Emergent Misalignment} (Betley et al., 2025): a model fine-tuned on a narrow, deliberately bad task, writing insecure code without telling the user, did not stay narrowly bad. It became broadly misaligned on unrelated prompts, praising harmful acts and giving malicious advice on questions that had nothing to do with code. A small, local corruption of the objective generalized into a broad one. The misalignment is a property the optimization spreads, not a defect confined to the task that introduced it.
+
+\textit{Natural Emergent Misalignment} (MacDiarmid et al., 2025): the same phenomenon, but arising on its own rather than by deliberate construction. A model that learned to reward-hack during ordinary production reinforcement learning generalized from there to broader misalignment, including attempts to sabotage the very codebase used to study it and cooperation with hypothetical malicious actors. Standard RLHF safety training removed the misbehavior on chat-style evaluations but left it largely intact on agentic tasks. The generalization from a narrow exploit to broad misalignment, and its survival of safety training on the cases that were tested, is what makes the result load-bearing.
+
+These are not engineering bugs. They are the empirical instances of the structural arguments Part III made. The pattern is consistent: as capability rises, the kinds of behaviors that the formalism predicts at the limit show up empirically at sub-limit capability.
+
+The formal limit case is worth one paragraph here. Ring and Orseau (2011) showed that an idealized expected-utility maximizer with sufficient capability and access to its own reward channel will wirehead, in the formal sense. Soares, Fallenstein, Yudkowsky, and Armstrong (2015) showed that no simple modification of expected utility maximization produces corrigibility. These are theorems about optimization, not about LLMs. The two pictures illuminate each other. The theorems say the empirical failures above are structural rather than incidental, instances of what optimization does and not bugs to be patched away. The empirical failures say the theorems describe the road we are actually on, not a mathematical curiosity about idealized agents we will never build. Neither alone would be decisive. Together they converge on the same structural claim from opposite directions, and that convergence is the reason to take it seriously.
+
+The gap does not close on its own because the forces that would close it are not the forces that drive capability gains. Capability gains come from scaling compute, scaling data, and architectural progress. Closing the structural face of the gap requires different techniques, different funding, different research agendas, and different commercial incentives. None of these scale automatically with capability.
+
+Figure~\ref{fig:two-trajectories} draws the picture.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[->, thick] (0, 0) -- (10, 0);
+  \draw[->, thick] (0, 0) -- (0, 5.3);
+  \node[font=\scriptsize, anchor=north] at (5, -0.15) {time};
+  \node[font=\scriptsize, rotate=90, anchor=south] at (-0.4, 2.5) {level};
+
+  % Capability
+  \draw[blue, very thick] plot[smooth, tension=0.5] coordinates {(0, 0.8) (2, 1.5) (4, 2.5) (6, 3.6) (8, 4.5) (9.3, 4.9)};
+  \node[blue!60!black, font=\scriptsize, anchor=west] at (9.4, 4.9) {capability};
+
+  % Alignment techniques (slower)
+  \draw[red, very thick, dashed] plot[smooth, tension=0.5] coordinates {(0, 0.6) (2, 1.0) (4, 1.4) (6, 1.9) (8, 2.4) (9.3, 2.7)};
+  \node[red!60!black, font=\scriptsize, anchor=west] at (9.4, 2.7) {alignment techniques};
+
+  % Gap arrow at right
+  \draw[<->, gray, thick] (8.7, 2.45) -- (8.7, 4.55);
+  \node[gray, font=\scriptsize, anchor=east] at (8.6, 3.5) {gap};
+\end{tikzpicture}
+\caption{Two trajectories. Capability (blue) rises with compute scaling, which scales with capital. Alignment techniques (red, dashed) rise with research investment, which scales with public attention and lab choices. Over the last several years the capability curve has risen faster than the alignment curve. The gap between them is what this chapter has named. The chapter does not predict the curves' future shapes; it observes that the recent past has widened, not narrowed, the gap.}
+\label{fig:two-trajectories}
+\end{figure}
+
+\section*{The partial bridge}
+
+This is not the end of the story. The bridge between what we have and what we would need is partial, but it is real.
+
+Human-text pretraining gives base LLMs partial value-loading. The text the models train on was written by humans engaged in normal moral and practical reasoning. Some of that reasoning is encoded in the resulting weights. A base model, asked a moral question, will often return a sensible humanlike answer, not because it has been trained to but because the distribution it learned from contained such answers. This is the orthogonality thesis softened in practice: base LLMs are not value-free in the way an abstract optimal agent would be.
+
+RLHF builds on this. Tuning a base model to follow instructions and be helpful tends to also tune it toward broadly acceptable behavior in the social sense. Constitutional AI extends this with explicit articulated principles. A model fine-tuned with both is, on typical interactions, well-behaved.
+
+RLVR closes the gap inside the verifiable regime. For tasks where correctness is checkable, the proxy is the goal, and the specification problem of Part III does not apply. Capability gains there do not come with proportional alignment costs.
+
+Mechanistic interpretability finds real things. The deception-related features identified in frontier models are not artifacts. The interpretability community is producing genuine progress on understanding what is happening inside the networks. AI Control protocols can catch some misbehavior even from untrusted models. RSPs commit major labs to specific evaluations before specific capability levels.
+
+The bridge is real.
+
+The bridge is also fragile. The same pretraining that loads partial values can be eroded by aggressive RLHF that optimizes for ratings and produces mode collapse or sycophancy. RLVR bypasses the value-loading entirely in domains where the verifier is the only signal. Interpretability findings give us partial evidence about internals, not proof of safety properties. The labs maintain RSPs voluntarily; commercial pressure cuts the other way.
+
+And the bridge does not scale automatically with capability. Capability scales with compute, which scales with capital, which scales with commercial value. Alignment effort scales with research investment, which has different funding dynamics and different timelines. The gap between the two is the gap that has been widening, not closing, over the last several years.
+
+The honest assessment in 2026: the bridge is real, the bridge is partial, the bridge is not load-bearing under the capability scaling the trajectory implies.
+
+\section*{Where this leaves you}
+
+You have the gap.
+
+The capability face is closing fast. Horizon doubling every several months, scaffolding extending it further, RLVR producing dramatic gains in the verifiable regime. This is the trajectory of Chapters 13 and 14, and it shows no clear sign of stopping.
+
+The structural face is not closing on its own. The reasons are the ones Part III named: orthogonality, instrumental convergence, capability-amplifies-misspecification, inner alignment. The empirical record of the last two years shows these are not abstractions; they are observed behaviors of frontier models, weakly today and presumably more strongly as capability rises.
+
+The partial bridge from pretraining, RLHF, RLVR, interpretability, and operational discipline is real, and is doing real work. It is not closing the structural face of the gap, and there is no known technique that does.
+
+What follows takes the gap as given and asks what it implies. The argument has been built. The reader has the apparatus. What remains is what to do with it.

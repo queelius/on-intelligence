@@ -1,0 +1,152 @@
+\chapter{What's Ahead}
+
+\vspace{1em}
+\hfill
+\begin{minipage}[c]{0.7\textwidth}
+\raggedleft
+\small\itshape
+We tend to overestimate the effect of a technology in the short run and underestimate the effect in the long run.\\[0.5em]
+\upshape\footnotesize Roy Amara (Amara's Law)
+\end{minipage}
+\vspace{1.5em}
+
+\noindent Chapter 15 named the gap and showed it widening. That raises the question this chapter is about. Is the widening a passing phase, the kind of thing that corrects as a field matures, or is it a feature of the road we are on? To answer that you have to look at what drives the road.
+
+This chapter makes the case that the drivers are structural and nowhere near spent. It does not give you a date. It gives you the shape of the trajectory and the reasons to expect it to continue, so that when you meet the next claim that progress is about to stall, or the next claim that everything changes next year, you can place both.
+
+\section*{The scaling story, honestly}
+
+Large language models are recent because the compute is recent. Twenty years ago you could not have trained one. The hardware did not exist at the needed scale and the data was not yet digitized. The popular version of this story credits Moore's law, the long observation that the number of transistors on a chip doubles roughly every two years. That story is true as far as it goes, and it is the long-arc enabler: decades of cheaper computation are what put a model like this within reach at all.
+
+But it is wrong about the last few years in an instructive way. Over a five-year window, raw per-chip improvement is modest. Moore's law did not suddenly accelerate. The recent gains came from three other places. The first is simply spending more: running thousands of processors in parallel for longer, so that total training compute for frontier models has grown by something like four to five times a year, far faster than the hardware underneath it. The second is data: more of it, and better curated. The third is algorithms. Better architectures and better training procedures have been improving the efficiency of learning at a rate comparable to the compute scale-up, so that a given level of capability costs far less compute to reach today than the same level cost a few years ago.
+
+Underneath the spending sits a regularity worth taking seriously. The scaling laws (Kaplan and collaborators in 2020, refined by the Chinchilla work in 2022) say that a model's prediction loss falls as a smooth power law in compute, data, and parameters. Smooth and predictable. This is the quiet reason the field can plan. A lab can estimate, before spending the money, roughly what a given budget will buy in lowered loss. Progress that can be budgeted for is progress that attracts budgets. Figure~\ref{fig:scaling-law} is the shape of the regularity.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  \draw[->, thick] (0,0) -- (9.6,0) node[right, font=\scriptsize, align=center] {training compute\\(log scale)};
+  \draw[->, thick] (0,0) -- (0,5.3) node[above, font=\scriptsize, align=center] {test loss\\(log scale)};
+  % power-law: straight descending line on log-log axes
+  \draw[blue!60!black, very thick] (0.6,4.7) -- (9.0,0.8);
+  \foreach \x/\y in {1.6/4.23, 3.6/3.30, 5.6/2.37, 7.6/1.44}
+    \filldraw[blue!60!black] (\x,\y) circle (2.4pt);
+  \node[blue!60!black, font=\scriptsize, anchor=south west] at (5.7,2.5) {loss $\sim$ compute$^{-\alpha}$};
+  \node[font=\scriptsize, anchor=north east, text width=4.3cm, align=right, gray] at (9.3,5.0) {a straight line on log-log axes: each tenfold increase in compute buys a fixed fractional drop in loss};
+\end{tikzpicture}
+\caption{The scaling law, in shape. Plotted with compute and loss both on logarithmic axes, the relationship is a straight descending line: prediction loss falls as a power law in compute. The exponent is small, so the gains are diminishing but steady and, crucially, predictable in advance. The dots are successive model scales. This smoothness is what lets a lab budget for capability before spending the money.}
+\label{fig:scaling-law}
+\end{figure}
+
+So the honest decomposition is this. Moore's law made the threshold reachable. What carried us across it, and keeps carrying, is spending plus data plus algorithmic progress, with the last of these doing as much work as the hardware. The headline ``the chips got faster'' is the smallest part of the recent story. The larger part is that we decided to spend, and we got much better at training these systems. Figure~\ref{fig:compute-moore} draws the two rates against each other.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  \draw[->, thick] (0,0) -- (10.2,0) node[right, font=\scriptsize] {year};
+  \draw[->, thick] (0,0) -- (0,5.6) node[above, font=\scriptsize, align=center] {training compute\\(FLOP, log scale)};
+  \foreach \x/\yr in {0/2012, 2.4/2015, 4.8/2018, 7.2/2021, 9.6/2024}
+    \draw (\x,0.08) -- (\x,-0.08) node[below, font=\scriptsize] {\yr};
+  % frontier training compute: ~4-5x per year (steep)
+  \draw[blue!60!black, very thick] (0,0.5) -- (9.6,5.1);
+  \node[blue!60!black, font=\scriptsize, anchor=south east, align=center] at (7.5,4.0) {frontier training compute\\($\approx 4\textrm{--}5\times$ per year)};
+  % Moore's law: 2x per 2 years (shallow), same start
+  \draw[gray, very thick, dashed] (0,0.5) -- (9.6,2.0);
+  \node[gray, font=\scriptsize, anchor=south] at (4.3,1.78) {Moore's law ($2\times$ per 2 years)};
+  % the gap
+  \draw[<->, orange!85!black, thick] (9.55,2.05) -- (9.55,5.05);
+  \node[orange!75!black, font=\scriptsize, anchor=east, align=right, text width=3.0cm] at (9.4,2.75) {this gap is spending and algorithms, not faster chips};
+\end{tikzpicture}
+\caption{Why ``Moore's law'' is the wrong headline. Frontier training compute (solid) has grown by roughly four to five times a year; Moore's law (dashed) doubles about every two years. The two lines are aligned at the start to compare growth rates, not absolute levels, so the widening gap between them is everything that is not raw hardware improvement: more chips bought, run longer, trained with better algorithms. The recent surge is mostly the gap, not the dashed line.}
+\label{fig:compute-moore}
+\end{figure}
+
+\section*{The economics of continuation}
+
+Scaling buys capability. The next question is whether the buying continues, and that is a question about money. The money already committed to AI is large in absolute terms, in the range of hundreds of billions of dollars a year of capital spending. Held against the right comparison, it is small. World output is on the order of a hundred trillion dollars. Cognitive labor, the thing these systems do, is a large fraction of that. Against the value of automating a meaningful slice of cognitive work, the current spend is a down payment.
+
+That is the structural reason to expect continuation, and it is not optimism. It is the logic of investment under positive returns. As long as each additional dollar of compute returns more than a dollar of value, a rational actor keeps spending, and competitors who stop are outcompeted by those who do not. The spending has risen every year because it has paid. The bet stops only when the returns flatten or the capital runs out, and so far neither has happened.
+
+This can change. A scaling wall could appear, where more compute stops buying lowered loss. An economic shock could pull the capital. A regulatory line could be drawn. Any of these is possible, and the chapter is not claiming they are not. It is locating the burden. The default path, the one you get by extending the forces currently in motion, is more spending and more capability. Predicting a stop means naming the specific thing that stops it.
+
+\section*{Benchmarks and the underestimation problem}
+
+If the drivers are as unspent as the last two sections argue, why does a stall feel imminent to so many people? Part of the answer is that we are bad at reading this curve, and the benchmarks are where the misreading shows. A benchmark has a short useful life. It begins too hard to be a useful metric, with every model scoring near zero and no signal in the noise. If the field stays interested, it ends too easy to be a useful metric, saturated near the ceiling, again with no signal. The useful window in between, where the benchmark actually discriminates, is often only a year or two wide. Watch the field long enough and you see benchmarks proposed as decade-long challenges fall in months.
+
+One episode makes the pattern concrete, and it is sobering because the people involved were trying hard to get it right. In 2021, a group of professional forecasters was commissioned to predict accuracy on MATH, a benchmark of competition mathematics problems. At the time, the best models scored about seven percent. The forecasters predicted that accuracy would reach roughly fifty-two percent by 2025. That prediction struck the researcher who commissioned it as aggressive. It was not aggressive enough. A model called Minerva reached just over fifty percent in the middle of 2022, three years ahead of the forecast, and one day before the prediction window even closed. Figure~\ref{fig:math-forecast} shows the miss.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  % axes
+  \draw[->, thick] (0,0) -- (9.6,0) node[right, font=\scriptsize] {year};
+  \draw[->, thick] (0,0) -- (0,5.0) node[above, font=\scriptsize] {MATH accuracy};
+  \foreach \x/\yr in {0/2021, 2/2022, 4/2023, 6/2024, 8/2025} {
+    \draw (\x,0.08) -- (\x,-0.08) node[below, font=\scriptsize] {\yr};
+  }
+  \foreach \y/\v in {0/0, 2/25, 4/50} {
+    \draw (0.08,\y) -- (-0.08,\y) node[left, font=\scriptsize] {\v\%};
+  }
+  % forecaster median: ~7% (2021) rising to ~52% (2025); 1% = 0.08 units
+  \draw[blue!60!black, thick, dashed] (0,0.56) -- (2,1.45) -- (4,2.35) -- (6,3.25) -- (8,4.16);
+  \node[blue!60!black, font=\scriptsize, anchor=south west, align=left] at (6.1,3.3) {forecast\\(made in 2021)};
+  % actual: ~7% (2021), jump to 50.3% mid-2022
+  \draw[red, very thick] (0,0.56) -- (0.95,0.66) -- (1.0,4.02) -- (3,4.2);
+  \filldraw[red] (1.0,4.02) circle (2.2pt);
+  \node[red!70!black, font=\scriptsize, anchor=west, align=left, text width=3.4cm] at (1.3,4.55) {Minerva, mid-2022:\\50.3\%, three years early};
+\end{tikzpicture}
+\caption{The MATH forecasting miss. In 2021, professional forecasters predicted MATH accuracy would reach about 52\% by 2025 (dashed), a prediction considered aggressive when accuracy was about 7\%. The actual jump to 50\% (red) arrived in mid-2022. The forecasters were not pessimists. They were optimists, and reality beat them by three years.}
+\label{fig:math-forecast}
+\end{figure}
+
+The lesson is not that forecasters are timid. They were optimistic, and they were still wrong by three years. Expert predictions of AI progress have a long record of being too slow, including the bold ones. That asymmetry is itself information about the trajectory. When the careful, optimistic guess keeps landing on the conservative side, the safe assumption is that you are still underestimating.
+
+\section*{The jagged edge}
+
+The sections so far have been about how fast capability is arriving. This one turns to a different question, the one that decides what the arrival actually feels like: not how fast, but what kind. The shape of the capability, not its rate.
+
+A common way to mark the trajectory is by compute parity with the brain. The estimate that the compute used to train a frontier model would reach the rough scale of the human brain around the end of this decade has been made seriously and is worth holding in mind. It is also worth holding with care. Estimates of the brain's effective computation span several orders of magnitude, and the careful surveys give wide ranges rather than a number.\footnote{The most thorough public treatment is Joseph Carlsmith, ``How Much Computational Power Does It Take to Match the Human Brain?'' (Open Philanthropy, 2020), whose central estimates span several orders of magnitude and which declines to give a single figure.} So parity is an order-of-magnitude heuristic, not a milestone you cross on a particular Tuesday. It tells you we are in the zone. It does not tell you what happens there.
+
+And parity, even if you grant it, does not mean human-equivalent, because capability is not a single number. The frontier is jagged. These systems are already well past human level at some things, recall, breadth, code, large classes of mathematics, and well short at others, long-horizon planning, physical common sense, knowing when they do not know. Figure~\ref{fig:jagged} draws the shape.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  % human baseline
+  \draw[gray, thick, dashed] (0.4,2.6) -- (10.2,2.6);
+  \node[gray, font=\scriptsize, anchor=west] at (10.25,2.6) {human};
+  % model jagged profile
+  \draw[blue!60!black, very thick]
+    (1,4.4) -- (2.8,3.7) -- (4.6,4.0) -- (6.4,1.5) -- (8.2,1.0) -- (10,1.7);
+  \foreach \x/\y in {1/4.4, 2.8/3.7, 4.6/4.0, 6.4/1.5, 8.2/1.0, 10/1.7}
+    \filldraw[blue!60!black] (\x,\y) circle (2.2pt);
+  \node[blue!60!black, font=\scriptsize, anchor=south] at (1,4.5) {model};
+  % faint guides
+  \foreach \x in {1,2.8,4.6,6.4,8.2,10} \draw[gray!25] (\x,0.7) -- (\x,4.7);
+  % dimension labels
+  \foreach \x/\lab in {1/{recall,\\breadth}, 2.8/{code}, 4.6/{routine\\math}, 6.4/{long-horizon\\planning}, 8.2/{physical\\common sense}, 10/{knowing when\\it is wrong}}
+    \node[font=\scriptsize, anchor=north, align=center, text width=1.9cm] at (\x,0.55) {\lab};
+\end{tikzpicture}
+\caption{The jagged frontier. Capability is not a scalar. Against a flat human reference, a current system runs well above on some axes and well below on others. ``Parity'' on a compute estimate says nothing about the shape of the profile, which is what a reader actually encounters.}
+\label{fig:jagged}
+\end{figure}
+
+Why jagged? Different inductive biases. Chapter 7 made the case that what a learner finds easy is set by the priors it brings. The human brain comes pre-loaded by evolution with priors weighted heavily toward the physical and social world. The competences that took evolution the most optimization, balance, manipulation, reading a face, are the ones that feel effortless to us and are the hardest to automate. These systems were shaped by a different pressure, predict human text, so they are strong exactly where we left the most text and weak where our competence is tacit and was never written down. The profile is built from different priors, so against ours it looks jagged.
+
+This is one principle, not three separate observations, and it is worth naming because it has run quietly through the whole book. A learner's strengths are fixed by where its optimization was already spent. Chapter 7 put it abstractly: the inductive bias that buys sample efficiency is a commitment about what the world is like, and it is paid for in generality elsewhere. Chapter 13 found the same thing concretely, in the four commitments the transformer makes about the structure of its data. The jagged frontier is that one principle made visible, by holding two differently-biased learners, evolution's and gradient descent's, side by side. Capability is never general in the abstract. It is general in the directions the spent optimization points, and thin everywhere else. That is as true of us as it is of them.
+
+That is what ``alien minds'' should mean here, and it is not mystical. It means built from different priors, and so general along different axes. Here is the turn worth sitting with. Humans are not very general either. Our generality is the narrow, evolved kind, fitted to the world our ancestors lived in. A system closer to a universal learner, the limit Chapters 4 and 8 described, carries fewer and less parochial priors, and can become general along axes we are not. Solomonoff induction run with fewer of the brain's built-in biases is not a weaker learner for lacking them. In the limit it is a stronger one.
+
+There is a useful frame for where the recent capability is coming from, as long as it is held as an analogy and not as a claim about human neurology. A base model's forward pass is fast, amortized inference, pattern completion in a fixed budget of computation, something like a trained intuition. The chain of thought, the verifiable-reward training, and the inference-time search of Chapter 14 are a deliberate layer placed on top of that intuition, spending serial computation to think before answering. The task-horizon curve of Chapter 13, the lengthening span of task a system can carry through, is in effect the scaling curve of that deliberate layer. The pace metaphor people reach for, that a year of this resembles several years of human development, is only a metaphor, but it points at something real. The deliberate layer is improving on a clock far faster than ours. Chapter 14 gave this its name: the deliberate layer is the second scaling curve, reinforcement learning scaling competence as pretraining scaled prediction, and of all the drivers on the table it is the one still nearest its beginning.
+
+\section*{The burden has shifted}
+
+Put the pieces together. The scaling laws have held across many orders of magnitude. Investment is far from saturated and rises because the returns are real. Algorithmic progress compounds on top of the compute. Reinforcement learning may be a second scaling curve entirely, still near its start. The crude parity heuristics put us in the zone. None of these is a proof. Together they change the default.
+
+For most of the field's history the burden of proof sat on anyone claiming transformative AI was near. That burden has shifted. Continuation is now the default, and the person betting against it owes a positive argument, a specific reason the drivers stop, not an appeal to how strange the conclusion sounds. ``It seems implausible'' is not an argument. The skeptic who wants the curve to bend has to say what bends it.
+
+The trajectory also has a mechanism that can steepen it. The systems are starting to build the systems. Coding is where this bites first, because code is verifiable in the sense of Chapter 14 and abundant in the training data, so it is one of the places these models became strong soonest. By the middle of 2026 one of the labs that builds a frontier model reported, of its own systems and so to be weighed with that in mind, that its model was writing more than four-fifths of the code merged into its production codebase, up from almost none a year and a half before, and that its engineers were merging several times the code per day they had two years earlier. The figure is a single vendor's self-report, not an audited measurement, and should be read as one. Even discounted, the direction it points is the one the rest of this chapter has been describing. This is the early, weak form of recursive self-improvement: AI accelerating the building of AI.
+
+It is worth being exact about how weak, because this is where hype and dismissal both wait. The same company noted that its model does not yet have the research taste to choose which problems are worth working on. That judgment, what to attempt, is the problem-finding from Chapter 14, the human form of the specification problem, and on the evidence it is among the last things to be automated, not the first. So the loop is real but not yet closed. The machines are writing the code. They are not yet choosing the work. The direction is set, and the distance left is exactly the distance this book has been about.
+
+That is what is ahead, as far as the structure will honestly tell us. Not a date. A direction, with the burden of proof now resting on the doubter, and a mechanism that can make the direction steepen. What it is that we have actually built, and why we still cannot tell it what we want, is the last chapter.

@@ -1,0 +1,130 @@
+\chapter{Reward and Reasoning}
+
+\vspace{1em}
+\hfill
+\begin{minipage}[c]{0.7\textwidth}
+\raggedleft
+\small\itshape
+That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal.\\[0.5em]
+\upshape\footnotesize Richard S. Sutton, the reward hypothesis (Sutton and Barto, 2018)
+\end{minipage}
+\vspace{1.5em}
+
+\noindent By the end of the previous chapter, a base language model is a predictor. It continues text, by approximating the conditional distribution of the next token. That is a great deal, and it is not, by itself, a useful assistant or a capable agent.
+
+This chapter is the second half: how a predictor is turned into the systems that answer questions, write working code, and carry a task across hours of work, and what that turning does to the specification problem of Part III.
+
+The short version is that you fine-tune the predictor with a reward signal. Everything then depends on what the reward signal is.
+
+\section*{Reinforcement learning from human feedback}
+
+The dominant fine-tuning approach for several years was RLHF: reinforcement learning from human feedback. Humans rate model outputs; a reward model is trained on the ratings; the base model is fine-tuned with RL to maximize the reward model's predictions. The result follows instructions, answers helpfully, and refuses most clearly harmful requests. Almost every chatbot you have used was tuned this way.
+
+Chapter 9 named the failure mode in advance. The reward model is a proxy for what humans actually want; the proxy is hackable; optimization finds the hacks. Sycophancy, length bias, mode collapse, and outright reward hacking are the surface symptoms. RLHF buys real alignment on typical inputs and leaves a gap that widens exactly where the optimizer is pushed hardest. This is the specification problem of Part III, now wearing the clothes of a production training pipeline.
+
+\section*{Reinforcement learning with verifiable rewards}
+
+The most consequential development of the 2024-2026 period is reinforcement learning with verifiable rewards (RLVR). Instead of training the reward model on human ratings, RLVR uses a verifier that can check whether an answer is correct in some absolute sense. Math problems have known correct answers; code can be executed and tested; formal logic has decidable validity; a chess move has a winner; a Lean proof either type-checks or it does not. For tasks in this regime, the reward signal is not a learned proxy of human preference. It is the ground truth of the task itself.
+
+This is where the historical GOFAI tradition (good old-fashioned AI: symbolic reasoning, rule systems, expert systems) re-enters the story. GOFAI failed as a solver in the 1980s and 1990s because its search and planning techniques could not produce good policies in open-world problems. But GOFAI's verifiers turned out to be very useful. Symbolic math checkers, code executors, theorem provers, type checkers, formal-verification tools, executable test suites: each is a piece of GOFAI infrastructure that confirms whether a candidate solution is correct without itself being able to produce solutions efficiently. The key asymmetry is between generation and verification. Generating a proof is hard; checking a proof is easy. Generating working code is hard; running it against tests and seeing what passes is easy. This asymmetry is, in complexity terms, the heart of the P-versus-NP question. RLVR exploits it directly.
+
+The recipe is clean. Deep RL learns the policy (the generator). A symbolic or executable verifier provides the reward (the checker). The model improves until the verifier accepts more and more of its outputs. Figure~\ref{fig:rlvr-loop} sketches the loop.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  scale=1.0,
+  every node/.style={align=center, font=\small},
+  >=Stealth
+]
+  \node[draw, thick, fill=blue!20, rectangle, rounded corners, minimum width=3cm, minimum height=1.5cm, text width=2.7cm] (policy) at (0, 0) {\textbf{LLM policy}\\\scriptsize generates candidate solutions};
+
+  \node[draw, thick, fill=red!20, rectangle, rounded corners, minimum width=3cm, minimum height=1.5cm, text width=2.7cm] (verifier) at (7, 0) {\textbf{Verifier}\\\scriptsize checks correctness\\\scriptsize (executor, prover, etc.)};
+
+  \draw[->, thick, blue] ([yshift=0.4cm]policy.east) -- node[above, font=\scriptsize, blue!50!black, midway] {candidate solution} ([yshift=0.4cm]verifier.west);
+  \draw[->, thick, red] ([yshift=-0.4cm]verifier.west) -- node[below, font=\scriptsize, red!50!black, midway] {reward signal (pass / fail)} ([yshift=-0.4cm]policy.east);
+
+  \node[font=\scriptsize, anchor=south, gray, text width=8cm, align=center] at (3.5, 1.5) {RL training pushes the policy toward outputs the verifier accepts. Where verification is feasible (math, code, formal logic), the reward signal is ground truth, not a learned proxy.};
+\end{tikzpicture}
+\caption{The RLVR loop. The LLM is the policy; the verifier is the reward. Unlike RLHF (where the reward is a learned model of human preferences and therefore hackable in the Goodhart sense), the RLVR reward is the actual correctness criterion of the task. Within the regime where verification is possible, the reward signal does not diverge from the goal under optimization.}
+\label{fig:rlvr-loop}
+\end{figure}
+
+It is worth being concrete about what \emph{learns the policy} means, because the mechanism is where the specification stakes become physical. Chapter 6's methods learned the \emph{value} of states: how good it is to be in a given situation. That approach cannot work for a language model, because the space of possible outputs, every string the model could emit, is far too large to tabulate. It is the same wall tabular methods hit in Chapter 6, now insurmountable. So instead of valuing states, training adjusts the policy's parameters directly: sample many candidate outputs, score each one with the reward, and nudge the weights to make the high-scoring outputs more probable and the low-scoring ones less probable. This is the \emph{policy-gradient} family, and it is the workhorse of every system in this chapter.\footnote{The production variants differ in bookkeeping, not in idea. PPO (proximal policy optimization) is the long-standing default for RLHF; GRPO (group relative policy optimization), used in recent reasoning models, drops the separate value network and scores a batch of samples against their own average. The conceptual move, push the policy toward what scored well, is the same in each.} The consequence is the one that matters for everything ahead: reinforcement learning does not merely select good answers, it reshapes the model's distribution over outputs toward whatever the reward scores highly. When the reward is the true correctness criterion, as in the verifiable regime, that is exactly what you want. When it is a proxy, the same machinery molds the model toward the proxy, and Part III's specification problem returns.
+
+Inference-time search composes naturally with this. AlphaGo's recipe in 2016 was a learned policy plus Monte Carlo Tree Search at inference time; the recent reasoning models do a looser version of the same idea. Generate a long chain of thought. Sample several chains. Score them with the verifier, or with a learned judge that approximates one. Pick the best. Spend more compute at inference time and the output gets better, often markedly so. The lesson AlphaGo encoded for game-tree problems generalizes: where you can score candidates cheaply, you should generate many of them.
+
+\section*{Why the verifiable regime is clean}
+
+The reason RLVR works as well as it does is the inverse of the reason Part III's specification problem applied. Optimization against a misspecified proxy produces misalignment. RLVR sidesteps the specification problem within the verifiable regime by making the proxy be the goal. There is no gap for the optimizer to exploit. Capability rises against the verifier without producing Goodhart-style failures.
+
+This is why the reasoning-model era has produced systems dramatically better at math, formal logic, and code than the previous generation. These are the domains where verification is cheap. Capability rises fast because the optimization is clean.
+
+The domains where this does not work, where verification is expensive or impossible, are the ones the book has been quietly pointing at throughout Part III. Most of what humans care about, in the deep sense, is not verifiable in this clean way. ``Be helpful'' is not verifiable. ``Be honest'' is not verifiable. ``Do not manipulate the user'' is not verifiable. Human values, broadly, do not come with executable test suites. The specification problem returns the moment we leave the verifiable regime.
+
+GOFAI itself, then, has a place in the modern AI story that nobody predicted in 2015. It is not the autonomous solver the 1970s hoped for. It is the trusted verifier the 2020s discovered they needed.
+
+\section*{The second scaling curve}
+
+There is a larger question underneath the reasoning models, and the rest of the book turns on it. Pretraining worked because of scale. Train a predictor on enough text, with enough compute, and it did not merely memorize. It generalized, acquiring a transferable command of language, fact, and reasoning that no one wrote in by hand. The scaling laws of Chapter 13 say that curve has not yet bent. The open question is whether reinforcement learning has a scaling curve of its own.
+
+The hypothesis is precise. Pretraining scaled \emph{prediction}. Large-scale reinforcement learning may scale \emph{competence}: not the ability to solve any one task, but the transferable procedures that hard tasks demand. How to break a large problem into smaller ones. How to choose an abstraction. How to combine partial results into a whole. When to abandon a branch and back up. These are not facts to be predicted; they are skills to be practiced, and reinforcement learning is how a system practices. Train on a narrow band of tasks and you get a narrow solver. Train on a wide enough range, the hypothesis runs, and the system stops learning the tasks and starts learning how to do tasks, the way pretraining stopped learning sentences and started learning language.
+
+Hold it as a live hypothesis, not a promise, because three things could undercut it. The first is that it may not be learning at all. A deflationary reading holds that reinforcement learning does not install new competence; it \emph{elicits} and sharpens competence the base model already absorbed during pretraining, in which case the curve flattens the moment those latent skills are spent. The evidence here is mixed and moving fast. Some results show reinforcement learning reaching solutions the base model never finds at any sampling budget, which bare elicitation struggles to explain. Others show it mainly sharpening what the base model could already do, with the base model catching up, or pulling ahead, once it is allowed to sample widely enough. The honest reading today is genuinely unsettled, and if anything it leans toward the sharpening view. The second caution is that the reinforcement-learning scaling curve is far younger and less charted than the pretraining one, measured over much less compute, and the early measurements hint that it may bend toward a ceiling rather than climb as openly as prediction did. The third caution is the one this chapter has been building. Reinforcement learning runs clean only in the verifiable regime, and the verifiable regime is narrow. Whether competence drilled on verifiable tasks, code, mathematics, proof, carries \emph{out} of that regime to the unverifiable goals that make up most of what we want is the hinge the whole trajectory turns on. If it carries, capability climbs past the place where we can check it. If it does not, it plateaus at the verifiable frontier. The next section walks up to that frontier from the human side.
+
+\section*{What is worth specifying?}
+
+Step back from the loop and ask what an expert actually does with a day.
+
+A mathematician does not spend most of the day proving theorems. The day goes to deciding which theorem is worth proving: which question is interesting, which direction is likely to pay off, which result, if obtained, would matter to the people whose judgment the mathematician respects. Once the right problem is in hand, the proof is often the more mechanical part. Einstein and Infeld put it plainly in 1938: ``The formulation of a problem is often more essential than its solution, which may be merely a matter of mathematical or experimental skill.'' Poincar\'e had described the mechanism a generation earlier: the mathematician's aesthetic sense is the sieve that selects, out of a combinatorial flood of possible ideas, the few worth pursuing; the useful combinations, he said, are precisely the most beautiful. Getzels and Csikszentmihalyi found the empirical version in a long study of art students: those who spent their effort \emph{finding} the problem, exploring and rearranging before committing, produced more original work and were still the more successful artists nearly two decades later. Hamming, in a much-quoted 1986 talk, reduced it to the question he pressed on his colleagues at lunch until they began avoiding him: what are the important problems of your field, and why are you not working on them?
+
+The software engineer is in the same position. When you can generate a correct implementation of almost any specification, the scarce act is no longer writing the code. It is deciding what is worth building, what the system should do, where the design should bend. Thurston, writing about mathematics in 1994, made the general version of the point: the value of the work is the advance in human understanding, not the proof object that certifies it. The artifact is downstream of the judgment.
+
+This is why the chapter's distinction runs deeper than it first looks. RLVR is strong precisely because it has an external, symbolic verifier: a compiler, a proof checker, a test suite, something outside the model trusted to say whether the answer is right. The strength does not come from the model checking itself; language models are notably weak at verifying their own work (Stechly, Valmeekam, and Kambhampati, 2024). It comes from the verifier being external and cheap. The choice of what is worth doing has no such verifier. There is no compiler for ``is this an interesting problem,'' no test suite for ``is this the program worth writing,'' no proof checker for ``is this the question that matters.'' The only verifiers that layer admits are slow, downstream, and contested: whether the result gets cited, whether the program gets used, whether the work survives. You cannot put a twenty-year citation lag inside a training loop. Figure~\ref{fig:verifier-ladder} shows the shape of it.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95, >=Stealth, every node/.style={align=center}]
+  % Three rungs
+  \node[draw, thick, fill=green!15, rounded corners, minimum width=5.4cm, minimum height=1.05cm, text width=5.1cm] (gen) at (3,0) {\footnotesize\textbf{execute / generate}\\\scriptsize write the proof, the code, the draft};
+  \node[draw, thick, fill=yellow!25, rounded corners, minimum width=5.4cm, minimum height=1.05cm, text width=5.1cm] (des) at (3,1.7) {\footnotesize\textbf{design}\\\scriptsize which approach, what the system should do};
+  \node[draw, thick, fill=red!15, rounded corners, minimum width=5.4cm, minimum height=1.05cm, text width=5.1cm] (sel) at (3,3.4) {\footnotesize\textbf{choose what is worth doing}\\\scriptsize which problem, what to build, what matters};
+
+  % Verifier descriptors to the right
+  \node[font=\scriptsize, anchor=west, text width=4cm, green!45!black] at (6.0,0) {verifier: fast, external, symbolic};
+  \node[font=\scriptsize, anchor=west, text width=4cm] at (6.0,1.7) {verifier: partial (review, rubrics, judges)};
+  \node[font=\scriptsize, anchor=west, text width=4cm, red!55!black] at (6.0,3.4) {verifier: slow, downstream, contested};
+
+  % left axis arrow
+  \draw[->, thick, gray] (-0.2,-0.5) -- (-0.2,3.9);
+  \node[font=\scriptsize, gray, rotate=90, anchor=south] at (-0.55,1.7) {value and difficulty rise; the verifier weakens};
+
+  % anchors
+  \node[font=\scriptsize, anchor=west, gray] at (6.0,-0.75) {RLVR works here};
+  \node[font=\scriptsize, anchor=west, gray] at (6.0,4.15) {human value concentrates here};
+\end{tikzpicture}
+\caption{The verifier thins as you climb. At the bottom, execution has a fast external verifier, which is exactly what RLVR exploits. Higher up, the verifier degrades to partial and slow, until at the top, the choice of what is worth doing, there is no verifier that fits inside a training loop, only downstream signals like citation, adoption, and survival. Value and difficulty rise as the verifier weakens.}
+\label{fig:verifier-ladder}
+\end{figure}
+
+This is the specification problem, reached from the human side. Part III was about the difficulty of choosing the objective for an optimizer: a capable system solves the problem you specify, and specifying the right problem is the hard, value-laden part that capability does not help with. The expert faces the same split. Generation is the solvable half. Choosing what to generate, the objective itself, is the half that resists formalization, for the mathematician and the engineer exactly as for the reward designer. A system that brilliantly optimizes a given target and a human who brilliantly executes a given task have both done the tractable part. What is worth targeting is the question that neither a verifier nor a proof can answer.
+
+The economics points the same way. When one step in a chain of complementary tasks gets cheap, value concentrates in the steps that remain hard. That is the logic of Kremer's O-ring model (1993), and it is why the tasks that resist automation are the ones where humans keep an advantage, which David Autor (2015) traced to Polanyi's paradox: we can automate what we can fully specify, and high-judgment work is precisely what we cannot fully specify. The near-term shape is already visible in how senior people work. As generation gets cheap, code becomes cheap and, increasingly, disposable; the human steps up a level, from writing the thing to deciding what is worth writing and directing the systems that write it, the way a research lead or a senior engineer already spends the day delegating and judging rather than producing. Recent analysis frames the binding constraint of an AI-rich economy not as intelligence but as human verification bandwidth: the capacity to decide what to ask for and to check what comes back.
+
+Three honest qualifications, because the comfortable version of this story is wrong in instructive ways.
+
+First, this is not a permanent human preserve, and anyone who tells you taste is a moat is overselling it. The verifiable frontier is moving. Rubrics, learned preference models, and model judges are converting more and more soft judgment into structured-enough proxies, and systems trained on a great deal of human judgment are getting better at taste, not worse. The honest claim is relocation, not impossibility. The line moves; it does not vanish; and every time it moves it reintroduces a specification question one level up, namely who writes the rubric and who curates the preferences.
+
+Second, the relocation helps only if there is a higher rung for humans to stand on. Recent work on the transition to advanced AI (Korinek and Suh, 2024) makes the point sharply: if the set of tasks at which humans hold an advantage is bounded, and capability climbs past it, value does not move up the hierarchy. It evaporates. The claim that humans keep stepping up a level is a bet that the ladder is tall enough, and the book does not know that it is.
+
+Third, and this is the thread that runs into the rest of the book, the move can undermine itself. Lisanne Bainbridge named the irony of automation in 1983: automate the routine, and you leave the human the hard residual plus the task of watching the machine, and the watching slowly erodes the very skill it depends on. A species that hands generation to its machines and keeps only judgment had better keep its judgment sharp, because judgment, including the judgment of whether a highly capable system is doing what we meant, is the one thing it cannot afford to delegate to the system it is trying to check.
+
+\section*{Where this leaves you}
+
+You now have the whole system.
+
+A base model is a predictor (Chapter 13). Fine-tuning turns it into an assistant and, wrapped in a scaffold that can act and observe, into an agent. RLHF does this with a learned model of human preference, which is a proxy, and proxies are hackable: the specification problem of Part III applies in full. RLVR does it with a verifier that checks correctness directly, and within the verifiable regime the proxy is the goal, so the specification problem does not apply at all. That is why the reasoning models are so strong on math, code, and formal logic, and why their strength does not obviously transfer to the things that have no executable test.
+
+The verifiable regime is where capability is rising fastest. The non-verifiable regime, which is most of what we actually want from these systems, is where the specification problem lives untouched.
+
+Chapter 15 takes the two systems now on the table, the optimal agent of Chapter 8 and the real one of these two chapters, and names the gap between them. Some of the gap is benign and shrinking. Some of it is the gap Part III named, and it has no known closing technique. The reader who has the apparatus is now in a position to see both.

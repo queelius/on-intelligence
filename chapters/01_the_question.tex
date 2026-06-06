@@ -1,0 +1,71 @@
+\chapter{The Question}
+
+\vspace{1em}
+\hfill
+\begin{minipage}[c]{0.55\textwidth}
+\raggedleft
+\small\itshape
+The man who has fed the chicken every day throughout its life at last wrings its neck instead.\\[0.5em]
+\upshape\footnotesize Bertrand Russell, \textit{The Problems of Philosophy} (1912)
+\end{minipage}%
+\hspace{0.5em}
+\begin{minipage}[c]{0.12\textwidth}
+% \includegraphics[width=\textwidth]{figures/ch01_question.png}
+\end{minipage}
+\vspace{1.5em}
+
+\noindent You wake up. The light through the window is the same color it was yesterday. The radio plays the same songs. The coffee tastes like coffee. You move through the morning as if the world will continue to behave the way it always has.
+
+You are usually right.
+
+This is not a small thing. Every gesture of the morning rests on a prediction. The floor will hold your weight. The faucet will produce water. The mirror will show a face that resembles the one you remember. The car will start. The road will lead to the place it led yesterday. You do not check any of these. You take them.
+
+If you stopped to verify each one, you would not make it to lunch.
+
+\section*{The shape of the day}
+
+The whole shape of waking life is this. You observe a small amount of data and you predict an enormous amount of structure. You see the sun rise once, and you expect it to rise again. You see one person smile, and you expect their face to be capable of smiling tomorrow. You see ice melt in a warm room and you do not, ever, consider that the next cube might catch fire instead.
+
+This is induction. The practice of inferring patterns from instances. It is the most universal cognitive act we perform, and it is so basic that you nearly cannot notice you are doing it. You did it as a child, before you had a word for it. You will do it tomorrow, the way you breathe.
+
+And it works. Not perfectly, not always, but well enough. You can plan a meeting next Tuesday. You can save money for retirement. You can raise children who will outlive you by decades. Induction is the engine of the entire human project. Science is induction with notation. Engineering is induction with materials. Medicine is induction with bodies. The patterns we extract from the world keep extracting themselves, more or less, the next time we look.\footnote{The most dramatic recent example is modern language models. Trained on trillions of words, they predict the next one by extrapolating patterns in their sample. They succeed where the patterns are representative of the structure they are predicting. They fail, sometimes spectacularly, where they are not. They are induction at civilizational scale, and, as later chapters show, they are bounded computable approximations of the mathematics this book is about.}
+
+\section*{The puzzle}
+
+Pause on what is strange about this.
+
+You have only ever experienced a vanishingly small slice of the universe. A few decades, a few thousand square kilometers, a handful of senses with finite resolution. From this slice, you are confidently making predictions about places you have never been, times you have not yet lived, processes you cannot directly observe. You are reasoning from the finite to the infinite, and you are getting it right often enough that the practice does not feel ridiculous.
+
+Why should this work?
+
+The naive answer is that the world is uniform. The laws of nature do not change between Monday and Tuesday, between here and there, between observed and unobserved. The future resembles the past because the rules are the same.
+
+But this is not an answer. It is a restatement. To say the future resembles the past because the world is uniform is to say induction works because induction works. If you ask how you know the world is uniform, the only evidence you can give is past experience. The world has been uniform up to now. You are using induction to justify induction.
+
+This is the problem of induction, and it has a name. David Hume named it in 1748. He observed that there is no purely logical argument from \emph{the sun has risen every day in human history} to \emph{the sun will rise tomorrow}. The conclusion does not follow from the premise. Adding the premise \emph{and the future will resemble the past} does not help, because that premise is exactly the conclusion we are trying to derive.
+
+Hume's own answer was that induction is not a matter of logic but of habit. We expect the sun because we have been conditioned to expect it. Custom, he said, is the great guide of human life. We do not justify induction. We simply do it, because that is the kind of creature we are.
+
+This is honest, but it is also unsatisfying. Habit is a fact about us. It tells us why we make the predictions. It does not tell us why the predictions are correct. The world really does keep cooperating with our expectations. The sun really does keep rising. Some explanation is owed.
+
+\section*{The chicken}
+
+Russell, two centuries after Hume, sharpened the worry into a story.
+
+A chicken is born on a farm. Every morning of its life, a man arrives with food. The chicken does what any reasonable inductive agent would do. It observes the pattern, generalizes, and forms the expectation that the man will bring food again tomorrow. The expectation is confirmed every day, for months. The chicken's confidence grows. Its prediction has the support of every instance it has ever experienced.
+
+Then one morning, the man arrives, picks up the chicken, and wrings its neck.
+
+The chicken's induction was reasonable. It was based on every available piece of evidence. It was the kind of inference that humans rely on for every meaningful decision they make. And it was wrong about the most important moment of the chicken's existence, because the chicken did not have access to the structure that explained why the food was coming. The relevant structure was about a different animal entirely.
+
+The story is not a refutation of induction. It is a clarification of what induction is. Induction is a pattern-matching operation on a finite sample, performed by an agent embedded in a larger structure it cannot fully see. The operation is approximately correct when the pattern in the sample is representative of the larger structure. It is wrong when the sample is misleading, when the structure is more complicated than the sample suggests, when the agent is not at the place in the structure it thinks it is.
+
+The chicken's mistake was not in performing induction. It was in not knowing what was on the other side of the question.
+
+\section*{On the other side}
+
+You are not the chicken. Your world cooperates with induction more often than the farm cooperated with the chicken, and on a vastly larger scale. But the question is the same. What is on the other side of your data? What is the world doing that rewards finite agents with finite data when they reason about the infinite?
+
+Hume named the puzzle. Russell sharpened it. Neither answered it.
+
+What answers it is a piece of mathematics about description and information, developed in the 1960s for reasons unrelated to chickens or sunrises. It begins with a library.
