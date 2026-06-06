@@ -22,6 +22,12 @@
 }
 \usepackage{xurl}  % load after hyperref: lets \url{} break at any character (no margin bleed)
 
+% Web/arXiv citations: attach a real https:// scheme to the link target (so EPUB
+% hrefs are valid, not broken scheme-less relative refs) while the displayed text
+% stays clean. Use \webcite{epoch.ai} and \arxivref{2502.17424} over bare \url{...}.
+\newcommand{\webcite}[1]{\href{https://#1}{\nolinkurl{#1}}}
+\newcommand{\arxivref}[1]{\href{https://arxiv.org/abs/#1}{\nolinkurl{arXiv:#1}}}
+
 % Math
 \usepackage{amsmath}
 \usepackage{amssymb}

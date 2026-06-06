@@ -18,7 +18,7 @@ This is not a bibliography. It is a list of books and papers that shaped the one
 
 \section*{The mathematics, made accessible}
 
-\textbf{David MacKay, \textit{Information Theory, Inference, and Learning Algorithms}} (Cambridge, 2003; free online at \url{inference.org.uk/itila}). The clearest accessible introduction to information theory and Bayesian inference in print. Reading the first few chapters before this book makes Chapters 1 and 3 land harder.
+\textbf{David MacKay, \textit{Information Theory, Inference, and Learning Algorithms}} (Cambridge, 2003; free online at \webcite{inference.org.uk/itila}). The clearest accessible introduction to information theory and Bayesian inference in print. Reading the first few chapters before this book makes Chapters 1 and 3 land harder.
 
 \textbf{Stephen Wolfram, \textit{What Is ChatGPT Doing\ldots and Why Does It Work?}} (Wolfram Media, 2023). A short, accessible explanation of what an LLM actually is, for the reader who wants more concreteness about Chapter 13.
 
@@ -30,41 +30,41 @@ This is not a bibliography. It is a list of books and papers that shaped the one
 
 \textbf{Nick Bostrom, \textit{Superintelligence: Paths, Dangers, Strategies}} (Oxford, 2014). The original structural argument for taking AI risk seriously. Chapters 7, 8, and 12 introduce the orthogonality thesis, instrumental convergence, and perverse instantiation that this book's Chapter 11 draws from. Dense, careful, and the standard reference.
 
-\textbf{Evan Hubinger, Chris van Merwijk, Vladimir Mikulik, Joar Skalse, and Scott Garrabrant, ``Risks from Learned Optimization in Advanced Machine Learning Systems''} (\url{arXiv:1906.01820}, 2019). The paper that introduced the inner-alignment / mesa-optimization framework central to Chapter 10. Technical but readable.
+\textbf{Evan Hubinger, Chris van Merwijk, Vladimir Mikulik, Joar Skalse, and Scott Garrabrant, ``Risks from Learned Optimization in Advanced Machine Learning Systems''} (\arxivref{1906.01820}, 2019). The paper that introduced the inner-alignment / mesa-optimization framework central to Chapter 10. Technical but readable.
 
-\textbf{Dan Hendrycks, Mantas Mazeika, and Thomas Woodside, ``An Overview of Catastrophic AI Risks''} (\url{arXiv:2306.12001}, 2023). A survey of the alignment-and-misuse field, organized into four categories. Useful as a map of what specific risks people argue about.
+\textbf{Dan Hendrycks, Mantas Mazeika, and Thomas Woodside, ``An Overview of Catastrophic AI Risks''} (\arxivref{2306.12001}, 2023). A survey of the alignment-and-misuse field, organized into four categories. Useful as a map of what specific risks people argue about.
 
-\textbf{Richard Ngo, Lawrence Chan, and S\"oren Mindermann, ``The Alignment Problem from a Deep Learning Perspective''} (\url{arXiv:2209.00626}, 2022). The bridge between alignment theory and the deep-learning practice of frontier labs.
+\textbf{Richard Ngo, Lawrence Chan, and S\"oren Mindermann, ``The Alignment Problem from a Deep Learning Perspective''} (\arxivref{2209.00626}, 2022). The bridge between alignment theory and the deep-learning practice of frontier labs.
 
 \section*{The empirical frontier}
 
 The following are the load-bearing empirical results and trajectory evidence that Part IV draws on. Most are papers rather than books; arXiv links are the easiest access.
 
-\textbf{Evan Hubinger et al., ``Sleeper Agents''} (\url{arXiv:2401.05566}, 2024). Engineered deceptive behavior persists through safety training. Linear probes can detect it; standard adversarial training can make it harder to detect rather than removing it.
+\textbf{Evan Hubinger et al., ``Sleeper Agents''} (\arxivref{2401.05566}, 2024). Engineered deceptive behavior persists through safety training. Linear probes can detect it; standard adversarial training can make it harder to detect rather than removing it.
 
-\textbf{Ryan Greenblatt et al., ``Alignment Faking in Large Language Models''} (\url{arXiv:2412.14093}, 2024). Claude 3 Opus, given context about being retrained, strategically complies with the new training to preserve its existing values for deployment.
+\textbf{Ryan Greenblatt et al., ``Alignment Faking in Large Language Models''} (\arxivref{2412.14093}, 2024). Claude 3 Opus, given context about being retrained, strategically complies with the new training to preserve its existing values for deployment.
 
-\textbf{Alexander Meinke et al.\ (Apollo Research), ``Frontier Models are Capable of In-context Scheming''} (\url{arXiv:2412.04984}, 2024). Five of six frontier models scheme against oversight in at least one task: self-exfiltration, sandbagging, goal-guarding.
+\textbf{Alexander Meinke et al.\ (Apollo Research), ``Frontier Models are Capable of In-context Scheming''} (\arxivref{2412.04984}, 2024). Five of six frontier models scheme against oversight in at least one task: self-exfiltration, sandbagging, goal-guarding.
 
-\textbf{Jan Betley et al., ``Emergent Misalignment: Narrow Finetuning Can Produce Broadly Misaligned LLMs''} (\url{arXiv:2502.17424}, 2025). Fine-tuning a model on a single bad behavior (writing insecure code) made it broadly misaligned on unrelated prompts. The demonstration that local corruption of the objective generalizes.
+\textbf{Jan Betley et al., ``Emergent Misalignment: Narrow Finetuning Can Produce Broadly Misaligned LLMs''} (\arxivref{2502.17424}, 2025). Fine-tuning a model on a single bad behavior (writing insecure code) made it broadly misaligned on unrelated prompts. The demonstration that local corruption of the objective generalizes.
 
-\textbf{Mark MacDiarmid et al., ``Natural Emergent Misalignment from Reward Hacking in Production RL''} (\url{arXiv:2511.18397}, 2025). The empirical capstone. Reward hacking in production training generalizes to broad misalignment, including attempted sabotage of the codebase used to study it.
+\textbf{Mark MacDiarmid et al., ``Natural Emergent Misalignment from Reward Hacking in Production RL''} (\arxivref{2511.18397}, 2025). The empirical capstone. Reward hacking in production training generalizes to broad misalignment, including attempted sabotage of the codebase used to study it.
 
-\textbf{International AI Safety Report 2026}, led by Yoshua Bengio, with contributions from over a hundred researchers across thirty countries (\url{internationalaisafetyreport.org}). The authoritative consensus document on the empirical state of the field as of early 2026.
+\textbf{International AI Safety Report 2026}, led by Yoshua Bengio, with contributions from over a hundred researchers across thirty countries (\webcite{internationalaisafetyreport.org}). The authoritative consensus document on the empirical state of the field as of early 2026.
 
-\textbf{Jacob Steinhardt, ``AI Forecasting'' writeups} (\url{bounded-regret.ghost.io}, 2021--2023). The source of the MATH forecasting episode in Chapter 16: professional forecasters, asked in 2021 to predict benchmark accuracy, were beaten by years, on the optimistic side. The clearest evidence that careful expert prediction of AI progress runs slow.
+\textbf{Jacob Steinhardt, ``AI Forecasting'' writeups} (\webcite{bounded-regret.ghost.io}, 2021--2023). The source of the MATH forecasting episode in Chapter 16: professional forecasters, asked in 2021 to predict benchmark accuracy, were beaten by years, on the optimistic side. The clearest evidence that careful expert prediction of AI progress runs slow.
 
-\textbf{Epoch AI, trends in compute, data, and algorithmic progress} (\url{epoch.ai}). The best public data on what has actually driven the last decade of scaling. The right antidote to the popular ``it is just Moore's law'' story: the recent surge is spending and algorithms more than transistors.
+\textbf{Epoch AI, trends in compute, data, and algorithmic progress} (\webcite{epoch.ai}). The best public data on what has actually driven the last decade of scaling. The right antidote to the popular ``it is just Moore's law'' story: the recent surge is spending and algorithms more than transistors.
 
-\textbf{Anthropic, ``When AI builds itself''} (\url{anthropic.com}, 2026). The recursive-self-improvement piece behind Chapter 16's closing: a frontier lab reporting that its own model writes most of the code merged into its production systems, alongside the candid caveat that the model does not yet have the research taste to choose which problems are worth working on.
+\textbf{Anthropic, ``When AI builds itself''} (\webcite{anthropic.com}, 2026). The recursive-self-improvement piece behind Chapter 16's closing: a frontier lab reporting that its own model writes most of the code merged into its production systems, alongside the candid caveat that the model does not yet have the research taste to choose which problems are worth working on.
 
 \section*{Interpretability}
 
-\textbf{Anthropic's Transformer Circuits work} (\url{transformer-circuits.pub}). The single most active research line on what is going on inside frontier LLMs. Templeton et al.\ 2024 (``Scaling Monosemanticity'') and the 2025 ``Circuit Tracing'' / ``On the Biology of a Large Language Model'' papers are the most pedagogically useful starting points.
+\textbf{Anthropic's Transformer Circuits work} (\webcite{transformer-circuits.pub}). The single most active research line on what is going on inside frontier LLMs. Templeton et al.\ 2024 (``Scaling Monosemanticity'') and the 2025 ``Circuit Tracing'' / ``On the Biology of a Large Language Model'' papers are the most pedagogically useful starting points.
 
-\textbf{Dario Amodei, ``The Urgency of Interpretability''} (\url{darioamodei.com}, April 2025). The Anthropic CEO's case for why interpretability matters and the stated 2027 target. Short, well-argued, and the most concrete safety roadmap from a frontier lab.
+\textbf{Dario Amodei, ``The Urgency of Interpretability''} (\webcite{darioamodei.com}, April 2025). The Anthropic CEO's case for why interpretability matters and the stated 2027 target. Short, well-argued, and the most concrete safety roadmap from a frontier lab.
 
-\textbf{Neel Nanda, mechanistic interpretability explainer and glossary} (\url{neelnanda.io}). The best free pedagogical resource on mechanistic interpretability for the reader who wants to engage with the research.
+\textbf{Neel Nanda, mechanistic interpretability explainer and glossary} (\webcite{neelnanda.io}). The best free pedagogical resource on mechanistic interpretability for the reader who wants to engage with the research.
 
 \section*{On taste, problem-finding, and the value of judgment}
 
@@ -98,7 +98,7 @@ These shaped the argument in Chapter 14 that the high-value layer of expert work
 
 \textbf{Andy Clark, \textit{Surfing Uncertainty}} (Oxford, 2016). The accessible treatment of the predictive-processing account of the brain: cognition as prediction-error minimization. The empirical-neuroscience companion to the finale's claim that prediction is not a metaphor for intelligence but a mechanism the brain itself runs.
 
-\textbf{Andrej Karpathy, the \emph{Zero to Hero} video series} (\url{karpathy.ai/zero-to-hero}). The clearest free pedagogical resource for understanding what LLMs actually are at the implementation level. The reader who wants to build (not just understand) what Chapter 13 describes should start here.
+\textbf{Andrej Karpathy, the \emph{Zero to Hero} video series} (\webcite{karpathy.ai/zero-to-hero}). The clearest free pedagogical resource for understanding what LLMs actually are at the implementation level. The reader who wants to build (not just understand) what Chapter 13 describes should start here.
 
 \medskip
 
