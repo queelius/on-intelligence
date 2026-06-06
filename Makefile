@@ -8,9 +8,12 @@ MAIN     = on-intelligence
 TEX      = $(MAIN).tex
 PDF      = $(MAIN).pdf
 EPUB     = $(MAIN).epub
+COVER    = kdp/cover-front.jpg
 DEPS     = $(TEX) $(wildcard chapters/*.tex) $(wildcard figures/*.tex)
 
-AUX_EXTS = aux log out toc bbl blg lof lot fls fdb_latexmk synctex.gz
+AUX_EXTS    = aux log out toc bbl blg lof lot fls fdb_latexmk synctex.gz
+# tex4ebook / tex4ht intermediates left in the working dir by `make epub`
+TEX4HT_EXTS = 4ct 4tc idv lg xref tmp ncx opf css dvi html
 
 .DEFAULT_GOAL := pdf
 
@@ -29,22 +32,24 @@ check: $(DEPS)
 	$(PDFLATEX) $(TEX)
 	@echo "Quick compile done (run 'make pdf' for full build)"
 
-# EPUB
+# EPUB (reflowable, Kindle/KDP-ready) via tex4ebook.
+# Math and the TikZ diagrams render to SVG (crisp and scalable on EPUB3
+# readers, with the LaTeX kept as img alt-text); footnotes become EPUB3 popup
+# notes; chapters split into separate XHTML files. The cover and metadata are
+# applied in place with ebook-meta (calibre), which does NOT re-render the
+# content, so the tex4ebook output (SVG figures, popup notes) is preserved.
+# Requires: tex4ebook (TeX Live) and ebook-meta (calibre). Optional: install
+# `tidy` for stricter XHTML validity (KDP re-validates on upload regardless).
 epub: $(EPUB)
 
-$(EPUB): $(DEPS)
-	pandoc $(TEX) \
-		-o $(EPUB) \
-		--toc \
-		--toc-depth=2 \
-		--split-level=2 \
-		--mathml \
-		--epub-title-page=true \
-		--epub-cover-image=figures/cover.png \
-		-M title="On Intelligence and Its Specification" \
-		-M author="Alex Towell" \
-		-M lang="en-US"
-	@echo "EPUB built: $(EPUB)"
+$(EPUB): $(DEPS) $(COVER)
+	tex4ebook -f epub3 $(TEX)
+	ebook-meta $(EPUB) \
+		--cover=$(COVER) \
+		--title="On Intelligence and Its Specifications" \
+		--authors="Alex Towell" \
+		--language=en
+	@echo "EPUB built: $(EPUB) ($$(du -h $(EPUB) 2>/dev/null | cut -f1))"
 
 # Word count
 wordcount:
@@ -57,8 +62,9 @@ wordcount:
 
 # Clean
 clean:
-	@for ext in $(AUX_EXTS); do rm -f *.$$ext; done
+	@for ext in $(AUX_EXTS) $(TEX4HT_EXTS); do rm -f *.$$ext; done
 	@rm -f chapters/*.aux
+	@rm -f $(MAIN)*.svg $(MAIN)*.xhtml
 	@echo "Cleaned auxiliary files (outputs preserved)"
 
 distclean: clean
@@ -68,9 +74,9 @@ distclean: clean
 help:
 	@echo "On Intelligence and Its Specification -- Build System"
 	@echo ""
-	@echo "  make pdf         Build PDF (two-pass, default)"
+	@echo "  make pdf         Build print PDF (latexmk, converges refs/TOC; default)"
 	@echo "  make check       Quick single-pass compile"
-	@echo "  make epub        Build EPUB"
+	@echo "  make epub        Build reflowable Kindle EPUB (tex4ebook, SVG math/figures, cover)"
 	@echo "  make wordcount   Word count"
 	@echo "  make clean       Remove auxiliary files"
 	@echo "  make distclean   Remove all generated files"
