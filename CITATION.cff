@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+title: "On Intelligence and Its Specifications"
+message: "If you reference this book in academic or critical work, please cite it using these metadata."
+type: software
+authors:
+  - given-names: Alexander
+    family-names: Towell
+    email: lex@metafunctor.com
+    orcid: "https://orcid.org/0000-0001-6443-9897"
+    affiliation: "Southern Illinois University Edwardsville"
+abstract: >-
+  A lay-readable book on the mathematics of optimal intelligence and what it
+  implies about modern AI. It develops the clean theory of optimal prediction
+  and decision (Bayesian inference, Solomonoff induction, and expected-utility
+  maximization, synthesized as AIXI), then turns to the bounded systems that
+  approximate it (large language models), and argues that the gap between the
+  theory and the practice is where the specification problem, and AI safety,
+  live. Seventeen chapters across four parts, written for the determined lay
+  reader, with diagrams carrying much of the conceptual weight.
+keywords:
+  - artificial intelligence
+  - AI safety
+  - AI alignment
+  - Solomonoff induction
+  - AIXI
+  - algorithmic information theory
+  - Bayesian inference
+  - reinforcement learning
+  - large language models
+  - the specification problem
+  - popular science
+license: CC-BY-NC-SA-4.0
+repository-code: "https://github.com/queelius/on-intelligence"
+url: "https://github.com/queelius/on-intelligence"
+date-released: "2026-06-05"
+version: "0.1.0"
