@@ -23,3 +23,10 @@ chapters/*.aux
 
 # Personal brainstorming scratchpad (held out of the public repo; add -f to include)
 notes.txt
+
+# Browser-automation session artifacts (Playwright snapshots + KDP screenshots)
+.playwright-mcp/
+/kdp-*.png
+
+# KDP local config (plugin-local working notes; the cover assets in kdp/ are tracked)
+.claude/
