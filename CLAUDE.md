@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Audience:** Determined but lay readers. Math is used where it has to be, conceptually explained first, then formalized. Diagrams carry most of the conceptual weight. Closer to a Penguin science book than to a textbook.
 
-**Current status:** Restructured from a previous philosophical framing. Lore restructured; old lore archived in `lore/archive/`. Some existing chapter material salvageable for the new direction. Drafting against the new outline not yet started.
+**Current status:** Complete and published. 17 chapters, 4 parts, 214 pages. Paperback on Amazon KDP (2026); reflowable EPUB built via `make epub`. The prior philosophical framing was extracted to the sibling project `../multitudes/`.
 
 **Structure:** 17 chapters across 4 parts.
 
@@ -27,11 +27,10 @@ Pedagogical move: Parts I-III develop the theory in clean settings (including th
 
 | Document | Function |
 |---|---|
-| `lore/outline.md` | 12-chapter outline, salvage plan from prior framing, drafting order. |
-| `lore/themes.md` | Thesis, central themes, what the book is and is not, voice, relationship to other work. |
+| `lore/outline.md` | 17-chapter outline (4 parts), role of each chapter, drafting order. |
+| `lore/themes.md` | Thesis, central themes, what the book is and is not, voice, the committed stand, relationship to other work. |
 | `lore/direction.md` | Format, audience, tone, pedagogy, diagram principle, comparable works, KDP considerations. |
-| `lore/math-grounding.md` | Mathematical reference. Needs updating: drop MWI/CUH/observer-measure (old framing); keep Cox, Kraft, Solomonoff, dominance; add RL, utility theory, AIXI. |
-| `lore/archive/` | Old lore from the prior philosophical framing (grace, foundations, implications, etc.). Kept for reference; the math content is salvageable, the philosophical arc is not in the new book. |
+| `lore/math-grounding.md` | Mathematical reference: Cox, Kraft, Solomonoff, dominance, RL, utility theory, AIXI. |
 
 ## Key Constraints
 
@@ -81,48 +80,23 @@ Chapter-specific docs (e.g., `lore/aixi.md`, `lore/llms.md`, `lore/safety.md`) c
 5. Part III in sequence (Ch 9–11).
 6. Ch 12 (substantial closing) last, once both sides of the gap are in hand.
 
-## Salvage from prior framing
-
-Existing chapter files in `chapters/` belong to the prior framing. Many will be archived; some salvage for the new direction:
-
-| Current file | Status |
-|---|---|
-| `01_the_question.tex` | Partial salvage; opening framing for new Ch 1. |
-| `02_the_library.tex` | Strong salvage; material for new Ch 4 (Solomonoff). |
-| `03_the_indexing.tex` | Strong salvage; material for new Ch 1 (Bayes). |
-| `04_the_prior.tex` | Salvage; material for new Ch 2 (The Prior Problem). |
-| `05_the_optimality.tex` | Salvage; material for new Ch 4 (dominance theorem). |
-| `06_the_slip.tex` | Archive (CUH work, not in new book). |
-| `07_the_inhabited_library.tex` | Archive. |
-| `08_the_observer.tex` | Partial salvage; "What an observer is" section reframes to new Ch 6 / Ch 7. |
-| `09_indifference_of_measure.tex` | Archive. |
-| `10_continuation.tex` | Archive. |
-| `00_preface.tex`, `00_dedication.tex` | Archive; new frontmatter for new book. |
-| `98_reading.tex`, `99_about.tex`, `99_also_by.tex` | Update for new book. |
-
-Chapter archival happens incrementally; old chapters move to `chapters/archive/` as new chapters are drafted that supersede them.
-
 ## Repository Structure
 
 ```
-multitudes/
-├── multitudes.tex            # Main LaTeX file (will need updating for new structure)
-├── chapters/                 # Chapter .tex files (mixed: old framing + new in progress)
-│   └── archive/              # Archived chapters from prior framing (planned)
-├── lore/                     # Pedagogical documentation (restructured)
-│   ├── outline.md            # 12-chapter outline
-│   ├── themes.md             # Thesis and voice
-│   ├── direction.md          # Format, audience, pedagogy
-│   ├── math-grounding.md     # Mathematical reference (needs updating)
-│   └── archive/              # Old lore from prior framing
-├── figures/                  # TikZ diagrams
-├── images/                   # Bitmap images
-├── kdp/                      # KDP publishing resources
-└── Makefile                  # Build system (PDF, EPUB)
+on-intelligence/
+├── on-intelligence.tex       # main LaTeX file
+├── chapters/                 # the 25 chapter / frontmatter / backmatter .tex files
+├── lore/                     # editorial bible: outline, themes, direction, math-grounding
+├── figures/                  # TikZ diagrams (most are inline in the chapters)
+├── kdp/                      # cover assets (front + print-ready full-wrap PDF) + kdp.local.md
+├── docs/                     # editorial review and integration records
+├── Makefile                  # build system (PDF via latexmk, EPUB via tex4ebook)
+├── CITATION.cff              # citation metadata
+└── .zenodo.json              # Zenodo DOI metadata
 ```
 
 ## Note on the pivot
 
-The book began as a philosophical companion to *Worldlines* with a moral arc in Part II (grace as the chosen response to cosmic indifference). The moral salvage proved difficult to write at this length, and the author chose to restructure rather than force it. The technical material (AIT, Solomonoff, the library of programs, the observer-as-substructure framing) was the strongest part of the original work; the new direction takes that material as its spine and points it at a more concrete destination (AI safety understood mathematically).
+The book began as a philosophical companion to *Worldlines* with a moral arc in Part II (grace as the chosen response to cosmic indifference). The technical material (AIT, Solomonoff, the library of programs, the observer-as-substructure framing) was the strongest part, and the author restructured around it, pointing it at a concrete destination (AI safety understood mathematically). That became this published book.
 
-The old framing is preserved in `lore/archive/`. If the moral / philosophical arc becomes its own book later, the material is intact.
+The original philosophical framing (its draft chapters and lore bible) was extracted into a separate sibling project, `../multitudes/` (*Multitudes: The Indifference of Measure*, a Volume II to *Worldlines*), where the moral / computational-eternalism arc can become its own book.
