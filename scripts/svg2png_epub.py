@@ -46,9 +46,13 @@ def fix_img(m):
     tag, base = m.group(0), os.path.basename(m.group(1))
     tag = tag.replace(m.group(1) + ".svg", m.group(1) + ".png")
     w, h = sizes.get(base, (None, None))
-    if w and "style=" not in tag:
-        style = f' style="max-width:100%;width:{w}pt;height:auto"'
-        tag = re.sub(r'\s*/?>\s*$', style + "/>", tag)
+    # Preserve display size with a plain width ATTRIBUTE in CSS px (the PNG is
+    # rendered at ZOOMx that size, so it downsamples to retina sharpness). Kindle
+    # auto-fits images to the screen, so no max-width is needed -- and Kindle's
+    # newer converter rejects the max-width CSS property, so we must not emit it.
+    if w and "width=" not in tag:
+        px = round(float(w) * 96.0 / 72.0)
+        tag = re.sub(r'\s*/?>\s*$', f' width="{px}"/>', tag)
     return tag
 
 html_files = glob.glob(WORK + "/**/*.xhtml", recursive=True) + glob.glob(WORK + "/**/*.html", recursive=True)
@@ -68,11 +72,19 @@ cover_re = re.compile(
 n_cov = 0
 for x in html_files:
     t = open(x, encoding="utf-8").read()
-    t, k = cover_re.subn(r'<img src="\1" alt="Cover" style="max-width:100%;height:auto"/>', t)
+    t, k = cover_re.subn(r'<img src="\1" alt="Cover"/>', t)
     if k:
         n_cov += k
         open(x, "w", encoding="utf-8").write(t)
 print(f"replaced {n_cov} inline-SVG cover wrapper(s) with <img>")
+
+# Strip max-width declarations from CSS too: Kindle's converter rejects the
+# property (it auto-fits content to the screen), and it is not load-bearing here.
+for c in glob.glob(WORK + "/**/*.css", recursive=True):
+    css = open(c, encoding="utf-8").read()
+    css2 = re.sub(r'\s*max-width\s*:[^;}]*;?', '', css)
+    if css2 != css:
+        open(c, "w", encoding="utf-8").write(css2)
 
 # Rewrite the OPF manifest: svg hrefs/ids/media-types -> png; drop the svg property.
 for o in glob.glob(WORK + "/**/*.opf", recursive=True):
