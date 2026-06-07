@@ -134,10 +134,20 @@
 
 \backmatter
 
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{part}{Notes and End Matter}
-\part*{Notes and End Matter}
+% "Notes and End Matter" divider before the back matter. tex4ht does not give an
+% unnumbered \part* its own file, so it attaches the heading to the root (front)
+% file and it surfaces on the title page in the EPUB. Branch on \HCode (defined
+% only under tex4ht): keep the part divider in print, use \chapter* for the EPUB
+% build, which tex4ht does split into its own file at the correct position.
+\ifdefined\HCode
+  \chapter*{Notes and End Matter}
+  \addcontentsline{toc}{chapter}{Notes and End Matter}
+\else
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{part}{Notes and End Matter}
+  \part*{Notes and End Matter}
+\fi
 
 \include{chapters/97_philosophical_note}
 \include{chapters/97b_consequences_note}
