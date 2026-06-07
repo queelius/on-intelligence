@@ -40,9 +40,21 @@ def rewrite(path, subs):
         t = re.sub(pat, repl, t)
     open(path, "w", encoding="utf-8").write(t)
 
-# container.xml: the OPF is now inside OEBPS/.
+# container.xml: rewrite it PRISTINE. calibre leaves a blank line inside
+# <rootfiles> (and trailing whitespace after </container>); Kindle Previewer's
+# KFX parser miscounts that empty line as a second <rootfile>, reporting E21027
+# "more than one opf file." Emit a minimal, whitespace-clean container with
+# exactly one rootfile pointing at the (now OEBPS/) OPF.
 container = os.path.join(WORK, "META-INF", "container.xml")
-rewrite(container, [(r'full-path="content\.opf"', 'full-path="OEBPS/content.opf"')])
+open(container, "w", encoding="utf-8").write(
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<container version="1.0" '
+    'xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n'
+    '  <rootfiles>\n'
+    '    <rootfile full-path="OEBPS/content.opf" '
+    'media-type="application/oebps-package+xml"/>\n'
+    '  </rootfiles>\n'
+    '</container>\n')
 
 # content.opf and toc.ncx are now inside OEBPS/, so their references to "OEBPS/x"
 # become bare "x" (siblings). Root-file refs (cover.jpg, *.css, ...) are already
