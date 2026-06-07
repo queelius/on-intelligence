@@ -38,15 +38,18 @@ check: $(DEPS)
 #   1. tex4ebook renders the LaTeX to EPUB3. Math and the TikZ diagrams become SVG
 #      (crisp and scalable, with the LaTeX kept as img alt-text), footnotes become
 #      EPUB3 popup notes, and chapters split into separate XHTML files.
-#   2. calibre (ebook-convert) normalizes that into a maximally reader-compatible
-#      EPUB3: a dedicated navigation document, sanitized valid XHTML, and the cover
-#      and metadata, while preserving the SVG math, figures, and popup footnotes.
+#   2. calibre (ebook-convert) normalizes that into a valid EPUB3: a dedicated nav
+#      document, sanitized XHTML, cover and metadata, preserving the SVG math,
+#      figures, and popup footnotes. (Do NOT drop --epub-version 3: without it
+#      calibre emits EPUB2-flavoured XHTML where epub:type footnotes are invalid.)
+#   3. add_ncx.py injects a legacy NCX (derived from the nav doc) that some Kindle
+#      converter paths rely on, while keeping the EPUB3 epubcheck-valid.
 # NOTE: Amazon's reflowable Kindle format does NOT accept SVG. For KDP, build the
 # Kindle edition instead (`make epub-kindle`), which rasterizes the SVG to PNG.
 # Requires: tex4ebook (TeX Live) and calibre (ebook-convert).
 epub: $(EPUB)
 
-$(EPUB): $(DEPS) $(COVER)
+$(EPUB): $(DEPS) $(COVER) scripts/add_ncx.py
 	tex4ebook -f epub3 $(TEX)
 	ebook-convert $(EPUB) $(MAIN)-normalized.epub \
 		--epub-version 3 \
@@ -57,6 +60,7 @@ $(EPUB): $(DEPS) $(COVER)
 		--preserve-cover-aspect-ratio \
 		--no-default-epub-cover
 	mv -f $(MAIN)-normalized.epub $(EPUB)
+	python3 scripts/add_ncx.py $(EPUB)
 	@echo "EPUB built: $(EPUB) ($$(du -h $(EPUB) 2>/dev/null | cut -f1))"
 
 # Kindle edition (for Amazon KDP): rasterize the SVG math/figures in the general
