@@ -44,12 +44,16 @@ check: $(DEPS)
 #      calibre emits EPUB2-flavoured XHTML where epub:type footnotes are invalid.)
 #   3. add_ncx.py injects a legacy NCX (derived from the nav doc) that some Kindle
 #      converter paths rely on, while keeping the EPUB3 epubcheck-valid.
+#   4. canonical_layout.py consolidates calibre's split layout (OPF/NCX/cover/CSS
+#      at the ZIP root, content in OEBPS/) into a single OEBPS/ folder. Kindle
+#      Previewer 3's KFX unpacker rejects the split layout (E21017 "problem while
+#      unpacking" -> spurious E21027 "more than one opf file").
 # NOTE: Amazon's reflowable Kindle format does NOT accept SVG. For KDP, build the
 # Kindle edition instead (`make epub-kindle`), which rasterizes the SVG to PNG.
 # Requires: tex4ebook (TeX Live) and calibre (ebook-convert).
 epub: $(EPUB)
 
-$(EPUB): $(DEPS) $(COVER) scripts/add_ncx.py
+$(EPUB): $(DEPS) $(COVER) scripts/add_ncx.py scripts/canonical_layout.py
 	tex4ebook -f epub3 $(TEX)
 	ebook-convert $(EPUB) $(MAIN)-normalized.epub \
 		--epub-version 3 \
@@ -61,6 +65,7 @@ $(EPUB): $(DEPS) $(COVER) scripts/add_ncx.py
 		--no-default-epub-cover
 	mv -f $(MAIN)-normalized.epub $(EPUB)
 	python3 scripts/add_ncx.py $(EPUB)
+	python3 scripts/canonical_layout.py $(EPUB) $(EPUB)
 	@echo "EPUB built: $(EPUB) ($$(du -h $(EPUB) 2>/dev/null | cut -f1))"
 
 # Kindle edition (for Amazon KDP): rasterize the SVG math/figures in the general
@@ -69,8 +74,9 @@ $(EPUB): $(DEPS) $(COVER) scripts/add_ncx.py
 # $(EPUB) for the SVG-capable stores. Requires: rsvg-convert (librsvg), python3+Pillow.
 epub-kindle: $(KINDLE_EPUB)
 
-$(KINDLE_EPUB): $(EPUB) scripts/svg2png_epub.py
+$(KINDLE_EPUB): $(EPUB) scripts/svg2png_epub.py scripts/canonical_layout.py
 	python3 scripts/svg2png_epub.py $(EPUB) $(KINDLE_EPUB) 2.5
+	python3 scripts/canonical_layout.py $(KINDLE_EPUB) $(KINDLE_EPUB)
 	@echo "Kindle EPUB built: $(KINDLE_EPUB) ($$(du -h $(KINDLE_EPUB) 2>/dev/null | cut -f1))"
 
 # Word count
