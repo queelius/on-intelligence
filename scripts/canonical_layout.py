@@ -11,7 +11,7 @@ standard layout pro tools (Sigil) produce and KP3 is tested against.
 
 Usage: canonical_layout.py IN.epub OUT.epub
 """
-import os, re, sys, glob, shutil, zipfile
+import os, re, sys, glob, shutil, zipfile, subprocess
 
 SRC = sys.argv[1]
 OUT = sys.argv[2] if len(sys.argv) > 2 else SRC
@@ -57,15 +57,27 @@ for fn in ("content.opf", "toc.ncx"):
 for p in glob.glob(oebps + "/*.xhtml") + glob.glob(oebps + "/*.html"):
     rewrite(p, [(r'(href|src)="\.\./', r'\1="')])
 
-# Repackage canonically: mimetype first and STORED, everything else DEFLATED.
-if os.path.exists(OUT):
-    os.remove(OUT)
-with zipfile.ZipFile(OUT, "w") as z:
-    z.write(os.path.join(WORK, "mimetype"), "mimetype", compress_type=zipfile.ZIP_STORED)
-    for root, _, files in os.walk(WORK):
-        for fn in files:
-            rel = os.path.relpath(os.path.join(root, fn), WORK)
-            if rel == "mimetype":
-                continue
-            z.write(os.path.join(root, fn), rel, compress_type=zipfile.ZIP_DEFLATED)
-print(f"repackaged {SRC} -> {OUT} (single OEBPS/ layout)")
+# Repackage canonically: mimetype first and STORED (no extra field, so the OCF
+# magic sits at offset 38), everything else DEFLATED. Prefer the system `zip`
+# (Info-ZIP) implementation: Kindle Previewer's Java unzipper (E21017 "problem
+# while unpacking") is pickier than Python's zipfile output, and Info-ZIP is the
+# implementation most EPUB tooling targets. Fall back to zipfile if zip is absent.
+out_abs = os.path.abspath(OUT)
+if os.path.exists(out_abs):
+    os.remove(out_abs)
+have_zip = shutil.which("zip") is not None
+if have_zip:
+    subprocess.run(["zip", "-X0", out_abs, "mimetype"], cwd=WORK, check=True,
+                   stdout=subprocess.DEVNULL)
+    subprocess.run(["zip", "-Xr9D", out_abs, "META-INF", "OEBPS"], cwd=WORK, check=True,
+                   stdout=subprocess.DEVNULL)
+else:
+    with zipfile.ZipFile(out_abs, "w") as z:
+        z.write(os.path.join(WORK, "mimetype"), "mimetype", compress_type=zipfile.ZIP_STORED)
+        for root, _, files in os.walk(WORK):
+            for fn in files:
+                rel = os.path.relpath(os.path.join(root, fn), WORK)
+                if rel == "mimetype":
+                    continue
+                z.write(os.path.join(root, fn), rel, compress_type=zipfile.ZIP_DEFLATED)
+print(f"repackaged {SRC} -> {OUT} (single OEBPS/ layout, {'system zip' if have_zip else 'zipfile'})")
