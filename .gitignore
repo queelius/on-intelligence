@@ -31,5 +31,5 @@ notes.txt
 # KDP local config (plugin-local working notes; the cover assets in kdp/ are tracked)
 .claude/
 
-# tex4ebook working directory (intermediate XHTML/SVG staging for `make epub`)
-on-intelligence-epub3/
+# pandoc eBook build dir (intermediate: rewritten chapters + rendered figs)
+build/

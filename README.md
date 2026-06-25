@@ -12,7 +12,7 @@ There is a real, settled, and genuinely beautiful theory of what intelligence is
 
 This book builds both halves from first principles, for the determined lay reader, and points at the gap honestly. The hardest problem turns out not to be making machines capable. It is saying what we want them to do. The specification problem is the whole game.
 
-**Status:** Complete. 17 chapters, 4 parts, 214 pages. Paperback published via Amazon KDP (2026); Kindle edition forthcoming.
+**Status:** Complete. 17 chapters, 4 parts, 214 pages. Both editions published via Amazon KDP (2026): paperback and reflowable Kindle eBook.
 
 ## What the book argues
 
@@ -35,24 +35,29 @@ The closing chapter takes a committed stand the mathematics earns: prediction ca
 
 ## Reading it
 
-- **Paperback:** published via Amazon KDP (6 x 9, 214 pages). Buy link added once the listing is live.
-- **From this repository:** the build outputs are tracked, so you can read it directly.
-  - [`on-intelligence.pdf`](on-intelligence.pdf), the print edition.
-  - [`on-intelligence.epub`](on-intelligence.epub), the reflowable Kindle edition (math and diagrams as scalable SVG, footnotes as popups).
+Both editions are live on Amazon:
+
+- **Kindle eBook:** [amazon.com/dp/B0H4DMBHND](https://www.amazon.com/dp/B0H4DMBHND) (reflowable).
+- **Paperback:** [amazon.com/dp/B0H4CCNVRQ](https://www.amazon.com/dp/B0H4CCNVRQ) (6 x 9, 214 pages, ISBN 979-8-1803407-5-7).
+
+Or read it straight from this repository (the build outputs are tracked):
+
+- [`on-intelligence.pdf`](on-intelligence.pdf), the print edition.
+- [`on-intelligence-kindle.epub`](on-intelligence-kindle.epub), the reflowable Kindle edition (math as MathML, the TikZ diagrams as images).
 
 ## Building from source
 
-The book is written in LaTeX. The print PDF builds with `latexmk` (it reruns until cross-references and the table of contents converge). The EPUB builds with `tex4ebook`, which renders the math and the TikZ diagrams to SVG and turns footnotes into EPUB3 popup notes.
+The book is written in LaTeX. The print PDF builds with `latexmk` (it reruns until cross-references and the table of contents converge). The Kindle eBook builds with `pandoc`: since pandoc cannot render TikZ, `scripts/render_tikz.py` first pre-renders each diagram to a transparent PNG and rewrites the chapters into `build/`, then pandoc emits the math as reflowing MathML and carries the diagrams as images. This is the toolchain Amazon KDP's converter accepts.
 
 ```bash
 make            # build the print PDF (default)
-make epub       # build the reflowable Kindle EPUB (needs tex4ebook + calibre)
+make epub       # build the Kindle eBook (on-intelligence-kindle.epub)
 make wordcount  # word count
 make clean      # remove build intermediates (outputs preserved)
 make help       # list all targets
 ```
 
-Requirements: a TeX Live distribution (with `latexmk` and `tex4ebook`) for the PDF and EPUB, and `calibre` (`ebook-meta`) to set the EPUB cover and metadata.
+Requirements: a TeX Live distribution (with `latexmk` and `pdflatex`) for the PDF and the diagram rendering, plus `pandoc` and poppler's `pdftocairo` for the eBook.
 
 ## Repository layout
 
@@ -64,7 +69,8 @@ on-intelligence/
 ├── figures/                 # TikZ diagrams (most are inline in the chapters)
 ├── kdp/                     # cover assets (front + print-ready full-wrap PDF)
 ├── docs/                    # editorial review and integration records
-├── Makefile                 # build system (PDF via latexmk, EPUB via tex4ebook)
+├── scripts/                 # render_tikz.py (TikZ -> PNG for the pandoc eBook build)
+├── Makefile                 # build system (PDF via latexmk, EPUB via pandoc)
 ├── CITATION.cff             # citation metadata ("Cite this repository")
 └── .zenodo.json             # Zenodo DOI metadata
 ```

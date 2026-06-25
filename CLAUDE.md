@@ -90,7 +90,8 @@ on-intelligence/
 ├── figures/                  # TikZ diagrams (most are inline in the chapters)
 ├── kdp/                      # cover assets (front + print-ready full-wrap PDF) + kdp.local.md
 ├── docs/                     # editorial review and integration records
-├── Makefile                  # build system (PDF via latexmk, EPUB via tex4ebook)
+├── scripts/                  # render_tikz.py (TikZ -> PNG for the pandoc eBook build)
+├── Makefile                  # build system (PDF via latexmk, EPUB via pandoc)
 ├── CITATION.cff              # citation metadata
 └── .zenodo.json              # Zenodo DOI metadata
 ```
